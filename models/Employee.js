@@ -47,6 +47,10 @@ const useSchema = mongoose.Schema({
         enum: ["active", "leave" , "absent", "terminated"],
         required: [true],
         default: "active"
+    },  
+    loginEnabled: {
+        type: Boolean,
+        default: false
     }   
 }, { timestamps: true })
 

@@ -27,7 +27,7 @@ exports.createEmployee = async ({employeeCode, firstname, lastname, username, em
     // check if employee exists
     const employeeExists = await Employee.findOne({ email })
     if (employeeExists) {
-        throw new Error("Employee already exists")
+        return {status:false, error:"Email already exists"}
     }
 
     // Hash password
@@ -57,4 +57,32 @@ exports.updateEmployee = async ({id, employeeCode, firstname, lastname, username
 
 exports.deleteEmployee = async (id) => {
     return Employee.deleteOne({ _id: id })
+}
+
+exports.updateEmployeeStatus = async ({id, status}) => {
+    return Employee.updateOne({ _id:id }, {
+        $set: {status}
+    })
+}
+
+exports.updateEmployeeRole = async ({id, role}) => {
+    return Employee.updateOne({ _id:id }, {
+        $set: {jobRoleId:role}
+    })
+}
+
+exports.updatePassword = async ({id, password}) => {
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    return Employee.updateOne({ _id:id }, {
+        $set: {password: hashedPassword}
+    })
+}
+
+exports.updateEmployeeAccountStatus = async ({id, loginEnabled}) => {
+    return Employee.updateOne({ _id:id }, {
+        $set: {loginEnabled}
+    })
 }
