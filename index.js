@@ -6,7 +6,6 @@ const cors = require('cors');
 const app = express();
 
 dotenv.config();
-console.log(require('./config/keys').MongoURI)
 // DB Config
 const db = require('./config/keys').MongoURI;
 
@@ -14,8 +13,8 @@ const db = require('./config/keys').MongoURI;
 mongoose.connect(db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false
+    useCreateIndex: true,
+    useFindAndModify: false
 })
     .then(() => console.log('MongoDB connected'))
     .catch(console.log);
@@ -33,7 +32,7 @@ app.use(cors())
 
 //Routes
 // app.use('/admin', require('./admin/routes/index'))
-// app.use('/employee', require('./employee/routes/index'))
+app.use('/employee', require('./employee/routes/index'))
 // app.use('/user', require('./user/routes/index'))
 
 const PORT = process.env.PORT || 8000;
