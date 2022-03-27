@@ -3,16 +3,6 @@ const Role = require('../../models/Role');
 exports.getAllRoles = async () => {
     const roles = await Role.aggregate([
         {
-            $addFields: {
-                id: '$_id'
-            }
-        },
-        {
-            $project: {
-                _id: 0
-            }
-        },
-        {
             $sort: {
                 createdAt: -1
             }

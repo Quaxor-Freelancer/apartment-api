@@ -4,17 +4,6 @@ const bcrypt = require('bcryptjs');
 exports.getAllEmployees = async () => {
     const employees = await Employee.aggregate([
         {
-            $addFields : {
-                id: '$_id'
-            }
-        },
-        {
-            $project : {
-                _id: 0,
-                password: 0
-            }
-        },
-        {
             $sort : {
                 createdAt: -1
             }
