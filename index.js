@@ -33,7 +33,7 @@ app.use(cors())
 
 //Routes
 // app.use('/admin', require('./admin/routes/index'))
-// app.use('/employee', require('./employee/routes/index'))
+app.use('/employee', require('./employee/routes/index'))
 // app.use('/user', require('./user/routes/index'))
 
 const PORT = process.env.PORT || 8000;
