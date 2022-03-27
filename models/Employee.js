@@ -38,9 +38,11 @@ const useSchema = mongoose.Schema({
     },
     jobRoleId: {
         type: mongoose.Types.ObjectId,
+        ref: "Role"
     },
     reportTo: {
         type: mongoose.Types.ObjectId,
+        ref: "Employee"
     },
     status: {
         type: String,

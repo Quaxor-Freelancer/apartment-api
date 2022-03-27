@@ -1,7 +1,7 @@
 const employeeServices = require('../services/employeeServices')
 
-const getAllEmployees= async (req, res) => {
-    await employeeServices.getAllEmployees()
+const getAllEmployees= (req, res) => {
+    employeeServices.getAllEmployees()
     .then((employees)=>{
         return res.status(201).json(employees)
     })
@@ -11,13 +11,13 @@ const getAllEmployees= async (req, res) => {
     })
 }
 
-const createEmployee = async (req, res) => {
-    const {employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportTo, status } = req.body;
+const createEmployee = (req, res) => {
+    const {employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportTo, status, loginEnabled } = req.body;
     if (!employeeCode || !firstname || !lastname || !username || !email || !password || !phone) {
         return res.status(500).send("Bad Request")
     }
 
-    employeeServices.createEmployee({ employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportTo, status })
+    employeeServices.createEmployee({ employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportTo, status, loginEnabled })
     .then((employees)=>{
         return res.status(201).json(employees)
     })
@@ -27,7 +27,7 @@ const createEmployee = async (req, res) => {
     })
 }
 
-const findEmployee = async (req, res) => {
+const findEmployee = (req, res) => {
     const { employeeId } = req.params
     if (!employeeId) {
         return res.status(500).send("Bad Request")
@@ -42,13 +42,13 @@ const findEmployee = async (req, res) => {
     })
 }
 
-const updateEmployee = async (req, res) => {
+const updateEmployee = (req, res) => {
     const { employeeId } = req.params
-    const {employeeCode, firstname, lastname, username, email, phone, address, department, jobRoleId, reportTo, status} = req.body
+    const {employeeCode, firstname, lastname, username, email, phone, address, department, jobRoleId, reportTo, status, loginEnabled} = req.body
     if  (!employeeId || !employeeCode || !firstname || !lastname || !username || !email || !phone) {
         return res.status(500).send("Bad Request")
     }
-    employeeServices.updateEmployee({id: employeeId, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportTo, status})
+    employeeServices.updateEmployee({id: employeeId, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportTo, status, loginEnabled})
     .then((response)=>{
         if(response.n===0){
             return res.status(201).json({status:false, error:"Employee not Found"})
@@ -79,7 +79,7 @@ const deleteEmployee = (req, res) => {
     })
 };
 
-const updateEmployeeStatus = async (req, res) => {
+const updateEmployeeStatus = (req, res) => {
     const { employeeId } = req.params
     const {status } = req.body
     if  (!employeeId || !status) {
@@ -98,7 +98,7 @@ const updateEmployeeStatus = async (req, res) => {
     })
 }
 
-const updateEmployeeRole = async (req, res) => {
+const updateEmployeeRole = (req, res) => {
     const { employeeId } = req.params
     const { role } = req.body
     if  (!employeeId || !role) {
@@ -117,7 +117,7 @@ const updateEmployeeRole = async (req, res) => {
     })
 }
 
-const updatePassword = async (req, res) => {
+const updatePassword = (req, res) => {
     const { employeeId, password } = req.body
     if  (!employeeId || !password) {
         return res.status(500).send("Bad Request")
@@ -135,7 +135,7 @@ const updatePassword = async (req, res) => {
     })
 }
 
-const updateEmployeeAccountStatus = async (req, res) => {
+const updateEmployeeAccountStatus = (req, res) => {
     const { employeeId, loginEnabled } = req.body
     if  (!employeeId || (loginEnabled===undefined)) {
         return res.status(500).send("Bad Request")
