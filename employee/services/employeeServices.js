@@ -1,5 +1,6 @@
 const Employee = require('../../models/Employee');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose')
 
 exports.getAllEmployees = async () => {
     const employees = await Employee.aggregate([
@@ -12,7 +13,7 @@ exports.getAllEmployees = async () => {
     return employees;
 }
 
-exports.createEmployee = async ({employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportTo, status, loginEnabled}) => {
+exports.createEmployee = async ({employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled}) => {
     // check if employee exists
     const employeeExists = await Employee.findOne({ email })
     if (employeeExists) {
@@ -25,7 +26,7 @@ exports.createEmployee = async ({employeeCode, firstname, lastname, username, em
 
     // Create employee
     const employee = await Employee.create({
-        employeeCode, firstname, lastname, username, email, password: hashedPassword, phone, address, department, jobRoleId, reportTo, status, loginEnabled
+        employeeCode, firstname, lastname, username, email, password: hashedPassword, phone, address, department, jobRoleId, reportToId, status, loginEnabled
     })
     return employee;
 }
@@ -35,12 +36,39 @@ exports.findEmployeeByEamil = async (email) => {
 }
 
 exports.findEmployeeById = async (id) => {
-    return Employee.findById(id).select('-password')
+    console.log(id)
+    return Employee.aggregate([
+        {
+            $match : { _id: mongoose.Types.ObjectId(id)}
+        },
+        {
+            $lookup: {
+                from: "roles",
+                as: "role",
+                localField: "jobRoleId",
+                foreignField: "_id"
+            }
+        },
+        {
+            $lookup: {
+                from: "employees",
+                as: "reportTo",
+                localField: "reportToId",
+                foreignField: "_id"
+            }
+        },
+        {
+            $project: {
+                password: 0,
+                'reportTo.password': 0
+            }
+        }
+    ])
 }
 
-exports.updateEmployee = async ({id, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportTo, status, loginEnabled}) => {
+exports.updateEmployee = async ({id, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled}) => {
     return Employee.updateOne({ _id:id }, {
-        $set: {employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportTo, status, loginEnabled}
+        $set: {employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled}
     })
 }
 

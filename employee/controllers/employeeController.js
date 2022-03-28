@@ -12,12 +12,12 @@ const getAllEmployees= (req, res) => {
 }
 
 const createEmployee = (req, res) => {
-    const {employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportTo, status, loginEnabled } = req.body;
+    const {employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled } = req.body;
     if (!employeeCode || !firstname || !lastname || !username || !email || !password || !phone) {
         return res.status(500).send("Bad Request")
     }
 
-    employeeServices.createEmployee({ employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportTo, status, loginEnabled })
+    employeeServices.createEmployee({ employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled })
     .then((employees)=>{
         return res.status(201).json(employees)
     })
@@ -34,7 +34,11 @@ const findEmployee = (req, res) => {
     }
     employeeServices.findEmployeeById(employeeId)
     .then((employee)=>{
-        return res.status(201).json(employee)
+        if(employee[0]){
+            return res.status(201).json(employee[0])
+        }else{
+            return res.status(500).json({status:false, error:"Employee Not Found"})
+        }
     })
     .catch((error)=>{
         console.log(error)
@@ -44,11 +48,11 @@ const findEmployee = (req, res) => {
 
 const updateEmployee = (req, res) => {
     const { employeeId } = req.params
-    const {employeeCode, firstname, lastname, username, email, phone, address, department, jobRoleId, reportTo, status, loginEnabled} = req.body
+    const {employeeCode, firstname, lastname, username, email, phone, address, department, jobRoleId, reportToId, status, loginEnabled} = req.body
     if  (!employeeId || !employeeCode || !firstname || !lastname || !username || !email || !phone) {
         return res.status(500).send("Bad Request")
     }
-    employeeServices.updateEmployee({id: employeeId, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportTo, status, loginEnabled})
+    employeeServices.updateEmployee({id: employeeId, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled})
     .then((response)=>{
         if(response.n===0){
             return res.status(201).json({status:false, error:"Employee not Found"})

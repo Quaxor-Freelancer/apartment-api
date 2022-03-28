@@ -40,7 +40,7 @@ const useSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Role"
     },
-    reportTo: {
+    reportToId: {
         type: mongoose.Types.ObjectId,
         ref: "Employee"
     },
