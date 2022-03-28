@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const useSchema = mongoose.Schema({
     employeeCode: {
         type: String,
+        unique: true,
         required: [true, "Please add Employee Code"]
     },
     firstname: {
@@ -46,14 +47,14 @@ const useSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["active", "leave" , "absent", "terminated"],
+        enum: ["active", "leave", "absent", "terminated"],
         required: [true],
         default: "active"
-    },  
+    },
     loginEnabled: {
         type: Boolean,
         default: false
-    }   
+    }
 }, { timestamps: true })
 
 module.exports = mongoose.model("Employee", useSchema);

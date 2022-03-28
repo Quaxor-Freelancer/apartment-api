@@ -5,7 +5,12 @@ const mongoose = require('mongoose')
 exports.getAllEmployees = async () => {
     const employees = await Employee.aggregate([
         {
-            $sort : {
+            $project: {
+                password: 0
+            }
+        },
+        {
+            $sort: {
                 createdAt: -1
             }
         }
@@ -13,11 +18,11 @@ exports.getAllEmployees = async () => {
     return employees;
 }
 
-exports.createEmployee = async ({employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled}) => {
+exports.createEmployee = async ({ employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled }) => {
     // check if employee exists
     const employeeExists = await Employee.findOne({ email })
     if (employeeExists) {
-        return {status:false, error:"Email already exists"}
+        return { status: false, error: "Email already exists" }
     }
 
     // Hash password
@@ -39,7 +44,7 @@ exports.findEmployeeById = async (id) => {
     console.log(id)
     return Employee.aggregate([
         {
-            $match : { _id: mongoose.Types.ObjectId(id)}
+            $match: { _id: mongoose.Types.ObjectId(id) }
         },
         {
             $lookup: {
@@ -66,9 +71,9 @@ exports.findEmployeeById = async (id) => {
     ])
 }
 
-exports.updateEmployee = async ({id, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled}) => {
-    return Employee.updateOne({ _id:id }, {
-        $set: {employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled}
+exports.updateEmployee = async ({ id, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled }) => {
+    return Employee.updateOne({ _id: id }, {
+        $set: { employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled }
     })
 }
 
@@ -76,30 +81,30 @@ exports.deleteEmployee = async (id) => {
     return Employee.deleteOne({ _id: id })
 }
 
-exports.updateEmployeeStatus = async ({id, status}) => {
-    return Employee.updateOne({ _id:id }, {
-        $set: {status}
+exports.updateEmployeeStatus = async ({ id, status }) => {
+    return Employee.updateOne({ _id: id }, {
+        $set: { status }
     })
 }
 
-exports.updateEmployeeRole = async ({id, role}) => {
-    return Employee.updateOne({ _id:id }, {
-        $set: {jobRoleId:role}
+exports.updateEmployeeRole = async ({ id, role }) => {
+    return Employee.updateOne({ _id: id }, {
+        $set: { jobRoleId: role }
     })
 }
 
-exports.updatePassword = async ({id, password}) => {
+exports.updatePassword = async ({ id, password }) => {
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    return Employee.updateOne({ _id:id }, {
-        $set: {password: hashedPassword}
+    return Employee.updateOne({ _id: id }, {
+        $set: { password: hashedPassword }
     })
 }
 
-exports.updateEmployeeAccountStatus = async ({id, loginEnabled}) => {
-    return Employee.updateOne({ _id:id }, {
-        $set: {loginEnabled}
+exports.updateEmployeeAccountStatus = async ({ id, loginEnabled }) => {
+    return Employee.updateOne({ _id: id }, {
+        $set: { loginEnabled }
     })
 }
