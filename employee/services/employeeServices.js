@@ -41,7 +41,6 @@ exports.findEmployeeByEamil = async (email) => {
 }
 
 exports.findEmployeeById = async (id) => {
-    console.log(id)
     return Employee.aggregate([
         {
             $match: { _id: mongoose.Types.ObjectId(id) }

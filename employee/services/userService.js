@@ -1,5 +1,37 @@
 const Employee = require('../../models/Employee');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose')
+
+exports.getMe = ({ _id }) => {
+    console.log(_id)
+    return Employee.aggregate([
+        {
+            $match: { _id: mongoose.Types.ObjectId(_id) }
+        },
+        {
+            $lookup: {
+                from: "roles",
+                as: "role",
+                localField: "jobRoleId",
+                foreignField: "_id"
+            }
+        },
+        {
+            $lookup: {
+                from: "employees",
+                as: "reportTo",
+                localField: "reportToId",
+                foreignField: "_id"
+            }
+        },
+        {
+            $project: {
+                password: 0,
+                'reportTo.password': 0
+            }
+        }
+    ])
+}
 
 exports.changeInfo = (employeeId, { firstname, lastname, phone, address }) => {
     return Employee.updateOne({ _id: employeeId }, {

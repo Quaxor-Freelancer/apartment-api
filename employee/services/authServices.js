@@ -10,8 +10,12 @@ exports.loginEmployee = async (email, password) => {
 
     if (employee && (await bcrypt.compare(password, employee.password))) {
         const encryptedEmployee = {
-            _id: employee.id,
-            email: employee.email
+            employee: {
+                _id: employee.id,
+                email: employee.email
+            },
+            type: 'authorization',
+            role: 'employee'
         }
         return {
             _id: employee.id,
@@ -31,7 +35,7 @@ exports.loginEmployee = async (email, password) => {
 exports.tokenRefresh = (refreshToken) => {
     try {
         const decodedEmployee = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
-        const accessToken = generateAccessToken({ id: decodedEmployee._id, email: decodedEmployee.email })
+        const accessToken = generateAccessToken(decodedEmployee)
         return accessToken;
     } catch (error) {
         console.log(error)
@@ -42,18 +46,23 @@ exports.tokenRefresh = (refreshToken) => {
 exports.forgotPassword = async (email) => {
     const employee = await Employee.findOne({ email })
     if (employee) {
-        const resetToken = makeUid(6)
+        const OTP = makeUid(6)
         const expiration = 30
         const expirationTime = Date.now() + expiration * 60 * 1000
-        const accountRecovery = {
-            token: resetToken,
+        // const accountRecovery = {
+        //     token: OTP,
+        //     expirationTime
+        // }
+        // const result = await Employee.updateOne({ _id: employee._id }, {
+        //     $set: { accountRecovery }
+        // })
+        employee.accountRecovery = {
+            OTP: OTP,
             expirationTime
         }
-        const result = await Employee.updateOne({ _id: employee._id }, {
-            $set: { accountRecovery }
-        })
+        await employee.save()
 
-        const resetUrl = config.FROENTEND_DOMAIN + "/" + config.PASSWORD_RESET_PATH + "/" + email + "/" + resetToken
+        const resetUrl = config.FROENTEND_DOMAIN + "/" + config.PASSWORD_RESET_PATH + "/" + email + "/" + OTP
 
         console.log(resetUrl)
         const params = {
@@ -62,9 +71,10 @@ exports.forgotPassword = async (email) => {
             title: "ElectroLeaf Password Recovery",
             text:
                 "Your password reset vertification code is " +
-                resetToken,
+                OTP,
             html:
-                `<div>Please reset your password using this link  ` +
+                `<h5>Your OTP is ${OTP}</h5>
+                <div>Please reset your password using this link  ` +
                 `<a href="${resetUrl}">${resetUrl}</a>` +
                 `</div>`
         }
@@ -72,7 +82,7 @@ exports.forgotPassword = async (email) => {
         return sendMail(
             params,
             (err, response) => {
-                console.log(JSON.stringify({ err, response, result }, null, 2));
+                console.log(JSON.stringify({ err, response }, null, 2));
                 if (err) throw new Error("Cannot send email")
                 return `Reset email sent to ${response && response.accepted && response.accepted[0]}`
             }
@@ -84,18 +94,43 @@ exports.forgotPassword = async (email) => {
     }
 }
 
+// exports.getTokenDetail = async ({ email, OTPVerified }) => {
+//     return {
+//         email,
+//         OTPVerified
+//     }
+// }
 
-exports.resetPassword = async ({ email, token, newPassword }) => {
+exports.verifyOTP = async ({ email, OTP }) => {
     try {
         const employee = await Employee.findOne({ email })
 
-        if (employee.accountRecovery && employee.accountRecovery.token === token) {
+        if (employee.accountRecovery && employee.accountRecovery.OTP === OTP) {
+
+            return "Valid OTP"
+
+        } else {
+            throw new Error("Not valid credientials")
+        }
+    } catch (error) {
+        throw error
+    }
+}
+
+exports.resetPassword = async ({ email, OTP, newPassword }) => {
+    try {
+        const employee = await Employee.findOne({ email })
+
+        if (employee.accountRecovery && employee.accountRecovery.OTP === OTP) {
             if (employee.accountRecovery.expirationTime && (employee.accountRecovery.expirationTime > Date.now())) {
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(newPassword, salt);
-                const result = await Employee.updateOne({ _id: employee._id }, {
-                    $set: { password: hashedPassword, accountRecovery: { token: null, expirationTime: null } }
-                })
+                employee.password = hashedPassword
+                employee.accountRecovery = { OTP: null, expirationTime: null }
+                await employee.save()
+                // const result = await Employee.updateOne({ _id: employee._id }, {
+                //     $set: { password: hashedPassword, accountRecovery: { OTP: null, expirationTime: null } }
+                // })
                 return "Password Changed"
             } else {
                 console.log("Reset Token expired")
