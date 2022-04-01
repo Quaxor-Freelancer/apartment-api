@@ -36,15 +36,41 @@ const forgotPassword = async (req, res) => {
     }
 }
 
+// const getTokenDetail = (req, res) => {
+//     const { tokenBody } = req
+//     authServices.getTokenDetail(tokenBody)
+//         .then(result => {
+//             res.json(result)
+//         })
+//         .catch(e => {
+//             res.sendStatus(500)
+//             console.log(e)
+//         })
+// }
+
+const verifyOTP = async (req, res) => {
+    try {
+        const { email, OTP } = req.body
+        if (!email || !OTP) {
+            res.status(400)
+            throw new Error("Please add missed fields")
+        }
+        const result = await authServices.verifyOTP({ email, OTP })
+        res.json({ status: true, result })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+}
+
 const resetPassword = async (req, res) => {
     try {
-        const { email, token, newPassword } = req.body
-        if (!email || !token || !newPassword) {
+        const { email, OTP, newPassword } = req.body
+        if (!email || !OTP || !newPassword) {
             res.status(400)
             throw new Error("Please add missed fields")
         }
 
-        const result = await authServices.resetPassword({ email, token, newPassword })
+        const result = await authServices.resetPassword({ email, OTP, newPassword })
         console.log(result)
         res.json({ status: true, result })
     } catch (error) {
@@ -56,5 +82,7 @@ module.exports = {
     loginEmployeee,
     tokenRefresh,
     forgotPassword,
+    // getTokenDetail,
+    verifyOTP,
     resetPassword
 }

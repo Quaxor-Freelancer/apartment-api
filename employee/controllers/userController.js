@@ -2,7 +2,14 @@ const userService = require('../services/userService')
 
 const getMe = (req, res) => {
     const user = req.user;
-    res.json(user)
+    userService.getMe(user)
+        .then(result => {
+            res.json(result)
+        })
+        .catch(e => {
+            console.log(e)
+            res.status(500).send("An Error occured")
+        })
 }
 
 const updateInfo = (req, res) => {
