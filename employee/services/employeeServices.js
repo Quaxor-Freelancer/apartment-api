@@ -18,7 +18,7 @@ exports.getAllEmployees = async () => {
     return employees;
 }
 
-exports.createEmployee = async ({ employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled }) => {
+exports.createEmployee = async ({ employeeCode, firstname, lastname, username, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
     // check if employee exists
     const employeeExists = await Employee.findOne({ email })
     if (employeeExists) {
@@ -31,7 +31,7 @@ exports.createEmployee = async ({ employeeCode, firstname, lastname, username, e
 
     // Create employee
     const employee = await Employee.create({
-        employeeCode, firstname, lastname, username, email, password: hashedPassword, phone, address, department, jobRoleId, reportToId, status, loginEnabled
+        employeeCode, firstname, lastname, username, email, password: hashedPassword, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled
     })
     return employee;
 }
@@ -63,6 +63,14 @@ exports.findEmployeeById = async (id) => {
             }
         },
         {
+            $lookup: {
+                from: "departments",
+                as: "department",
+                localField: "departmentId",
+                foreignField: "_id"
+            }
+        },
+        {
             $project: {
                 password: 0,
                 'reportTo.password': 0
@@ -71,9 +79,9 @@ exports.findEmployeeById = async (id) => {
     ])
 }
 
-exports.updateEmployee = async ({ id, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled }) => {
+exports.updateEmployee = async ({ id, employeeCode, firstname, lastname, username, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
     return Employee.updateOne({ _id: id }, {
-        $set: { employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled }
+        $set: { employeeCode, firstname, lastname, username, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }
     })
 }
 

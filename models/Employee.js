@@ -34,8 +34,9 @@ const useSchema = mongoose.Schema({
     address: {
         type: String,
     },
-    department: {
-        type: String,
+    departmentId: {
+        type: mongoose.Types.ObjectId,
+        ref: "Department"
     },
     jobRoleId: {
         type: mongoose.Types.ObjectId,

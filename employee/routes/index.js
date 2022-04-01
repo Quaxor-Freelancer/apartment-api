@@ -11,6 +11,8 @@ router.use('/user', require('./userRoute'));
 router.use('/buildings', require('./buildingRoute'));
 router.use('/apartments', require('./apartmentRoute'));
 router.use('/floors', require('./floorRoute'));
-
+router.use('/departments', require('./departmentRoute'));
+router.use('/facilities', require('./facilityRoute'));
+router.use('/buildingFacilities', require('./buildingFacilityRoute'));
 
 module.exports = router;
