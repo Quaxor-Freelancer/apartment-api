@@ -12,7 +12,9 @@ router.use('/buildings', require('./buildingRoute'));
 router.use('/apartments', require('./apartmentRoute'));
 router.use('/floors', require('./floorRoute'));
 router.use('/departments', require('./departmentRoute'));
+router.use('/resources', require('./resourceRoute'));
+router.use('/facilityCategories', require('./facilityCategoryRoute'));
 router.use('/facilities', require('./facilityRoute'));
-router.use('/buildingFacilities', require('./buildingFacilityRoute'));
+router.use('/facilityMembership', require('./facilityMembershipRoute'));
 
 module.exports = router;

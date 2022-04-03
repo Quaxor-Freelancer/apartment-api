@@ -9,14 +9,14 @@ exports.getBuilding = (buildingId) => {
     return Building.findById(buildingId)
 }
 
-exports.createBuilding = ({buildingCode, name, city, country, address, buildingType, facilityIds, floors = [], images = [], status}) => {
+exports.createBuilding = ({buildingCode, name, city, country, address, buildingType, facilityIds, floors = [], images = [], status, resourceIds}) => {
     const building = new Building({
-        buildingCode, name, city, country, address, buildingType, facilityIds, floors, images, status
+        buildingCode, name, city, country, address, buildingType, facilityIds, floors, images, status, resourceIds
     })
     return building.save()
 }
 
-exports.updateBuilding = ({buildingId, buildingCode, name, city, country, address, buildingType, facilityIds = [], floors = [], images, status}) => {
+exports.updateBuilding = ({buildingId, buildingCode, name, city, country, address, buildingType, facilityIds = [], floors = [], images, status, resourceIds}) => {
     return Building.updateOne({ _id: buildingId }, {
         $set: {
             buildingCode, 
@@ -28,7 +28,8 @@ exports.updateBuilding = ({buildingId, buildingCode, name, city, country, addres
             facilityIds, 
             floors, 
             images, 
-            status
+            status,
+            resourceIds
         }
     })
 }

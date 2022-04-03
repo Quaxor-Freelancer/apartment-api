@@ -24,54 +24,6 @@ const FloorSchema =  new Schema({
     }]
 }, { timestamps: true })
 
-const BuildingFacilitySchema =  new Schema({
-    facilityId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Facility',
-        required: true
-    },
-    buildingFloorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Building',
-        required: true
-    },
-    code: {
-        type: String,
-        required: true
-    },
-    common: {
-        type: Boolean,
-        default: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    details: {
-        type: String,
-        required: false
-    },
-    divisible: {
-        type: Boolean,
-        default: false
-    },
-    items:[{
-        code: {
-            type: String,
-            required: true
-        },
-        name: {
-            type: String,
-            required: true
-        }
-    }],
-    status: {
-        type: Boolean,
-        default: true
-    },
-    images: [Image]
-}, { timestamps: true })
-
 const BuildingSchema = new Schema({
     buildingCode: {
         type: String,
@@ -98,7 +50,7 @@ const BuildingSchema = new Schema({
         enum: ['new', 'upcoming', 'future', 'default'],
         default: 'default'
     },
-    facilities: [BuildingFacilitySchema],
+    resourceIds: [mongoose.Schema.Types.ObjectId],
     floors: [FloorSchema],
     images: [{
         type: String

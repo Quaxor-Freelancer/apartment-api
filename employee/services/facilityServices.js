@@ -1,7 +1,19 @@
 const Facility = require('../../models/Facility');
+const mongoose = require('mongoose');
 
-exports.getAllFacilities = async () => {
+exports.getAllFacilitiesByBuilding = async (id) => {
     const facilities = await Facility.aggregate([
+        {
+            $match: { buildingId: mongoose.Types.ObjectId(id)}
+        },
+        {
+            $lookup: {
+                from: "facilityCategories",
+                as: 'facilityCategory',
+                localField: 'facilityCategoryId',
+                foreignField: '_id'
+            }
+        },
         {
             $sort: {
                 createdAt: -1
@@ -11,36 +23,98 @@ exports.getAllFacilities = async () => {
     return facilities;
 }
 
-exports.createFacility = async ({ code, title, details, icon, status }) => {
+exports.getAllFacilitiesByFloor = async (id) => {
+    const facilities = await Facility.aggregate([
+        {
+            $match: { buildingFloorId: mongoose.Types.ObjectId(id)}
+        },
+        {
+            $lookup: {
+                from: "facilityCategories",
+                as: 'facilityCategory',
+                localField: 'facilityCategoryId',
+                foreignField: '_id'
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        }
+    ])
+    return facilities;
+}
+
+exports.getFacilityById = async (id) => {
+    console.log(id)
+    const facility= await Facility.aggregate([
+        {
+            $match: { _id: mongoose.Types.ObjectId(id)}
+        },
+        {
+            $lookup: {
+                from: "buildings",
+                as: 'building',
+                localField: 'buildingId',
+                foreignField: '_id'
+            }
+        },
+        {
+            $lookup: {
+                from: "facilityCategories",
+                as: 'facilityCategory',
+                localField: 'facilityCategoryId',
+                foreignField: '_id'
+            }
+        }
+    ])
+    if(!facility){
+        throw { status: false, error: "Facility Not Found"}
+    }
+    return facility
+}
+
+exports.createFacility = async (buildingId, {facilityCategoryId, buildingFloorId, code, common, name, details, divisible, items, status }) => {
+    if ( !facilityCategoryId || !buildingFloorId || !code || !name ) {
+        throw {status: false, error: "Bad Request"}
+    }
     // check if facility exists
     const facilityExists = await Facility.findOne({ code })
     if (facilityExists) {
-        return { status: false, error: "Facility code already exists" }
+        throw { status: false, error: "Facility  code already exists" }
     }
-
     // Create facility
     const facility = await Facility.create({
-        code, title, details, icon, status
+        buildingId, facilityCategoryId, buildingFloorId, code, common, name, details, divisible, items, status
     })
     return facility;
 }
 
-exports.findFacilityById = async (id) => {
-    return Facility.findById(id)
-}
 
-exports.updateFacility = async ({ id, code, title, details, icon, status }) => {
+exports.updateFacility = async ( id, { buildingId, facilityCategoryId, buildingFloorId, code, common, name, details, divisible, items, status }) => {
+    if  ( !buildingId || !facilityCategoryId || !buildingFloorId || !code || !name ) {
+        throw {status: false, error: "Bad Request"}
+    }
     // check if facility exists
     const facilityExists = await Facility.findOne({ code })
     if (facilityExists && facilityExists._id?.toString() !== id) {
-        return { status: false, error: "Facility code already exists" }
+        throw { status: false, error: "Facility code already exists" }
     }
-    return Facility.updateOne({ _id: id }, {
-        $set: { code, title, details, icon, status }
+    const result =await Facility.updateOne({ _id: id }, {
+        $set: {buildingId, facilityCategoryId, buildingFloorId, code, common, name, details, divisible, items, status}
     })
+    if(result.n ===0){
+        throw { status: false, error: "Facility category Not Found"}
+    }
+    return result
 }
 
+
 exports.deleteFacility = async (id) => {
-    return Facility.deleteOne({ _id: id })
+    const result = await Facility.deleteOne({ _id: id })
+    if(result.n ===0){
+        throw { status: false, error: "Facility Not Found"}
+    }
+    return result
 }
 

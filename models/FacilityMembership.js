@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const timeSchema = require('./schemas/Time')
 
 const facilityMembershipSchema = mongoose.Schema({
-    buildingFaciltyId: {
+    facilityId: {
         type: mongoose.Types.ObjectId,
-        ref: 'Building'
+        ref: 'Facility'
     },
     apartmentId: {
         type: mongoose.Types.ObjectId,

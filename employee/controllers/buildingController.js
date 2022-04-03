@@ -22,8 +22,8 @@ const getBuilding = (req, res) => {
 }
 
 const createBuilding = (req, res) => {
-    const {buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status} = req.body
-    buildingService.createBuilding({buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status})
+    const {buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds} = req.body
+    buildingService.createBuilding({buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds})
     .then(()=>{
         res.json({status: true})
     })
@@ -34,8 +34,8 @@ const createBuilding = (req, res) => {
 
 const updateBuilding = (req, res) => {
     const {buildingId} = req.params
-    const {buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status} = req.body
-    buildingService.updateBuilding({buildingId, buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status})
+    const {buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds} = req.body
+    buildingService.updateBuilding({buildingId, buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds})
     .then(()=>{
         res.json({status: true})
     })

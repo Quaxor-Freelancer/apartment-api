@@ -1,4 +1,4 @@
-const apartmentService = require('../services/apartmentService')
+const apartmentService = require('../services/apartmentServices')
 
 const getAllApartments = (req, res) => {
     apartmentService.getAllApartments()
