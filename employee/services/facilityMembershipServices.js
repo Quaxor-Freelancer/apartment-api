@@ -93,10 +93,10 @@ exports.getAllFacilityMembershipsByApartmentAndFacilityCategory = async (apartme
 
 exports.createFacilityMembership = async (facilityId ,{ apartmentId, type, membership, status }) => {
     if  ( !apartmentId || !type || !membership ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     if(!validateMembership(type, membership)){
-        throw { status: false, error: "Validation Error"}
+        throw { success: false, error: "Validation Error"}
     }
     // Create facility membership
     const facility = await FacilityMembership.create({
@@ -108,17 +108,17 @@ exports.createFacilityMembership = async (facilityId ,{ apartmentId, type, membe
 exports.findFacilityMembership = async (id) => {
     const facilityMembership= await FacilityMembership.findById(id)
     if(!facilityMembership){
-        throw { status: false, error: "FacilityMembership Not Found"}
+        throw { success: false, error: "FacilityMembership Not Found"}
     }
     return facilityMembership
 }
 
 exports.updateFacilityMembership = async ( id, {facilityId , apartmentId, type, membership, status }) => {
     if  ( !facilityId || !apartmentId || !type || !membership ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     if(!validateMembership(type, membership)){
-        throw { status: false, error: "Validation Error"}
+        throw { success: false, error: "Validation Error"}
     }
     return FacilityMembership.updateOne({ _id: id }, {
         $set: { facilityId , apartmentId, type, membership, status }
@@ -128,7 +128,7 @@ exports.updateFacilityMembership = async ( id, {facilityId , apartmentId, type, 
 exports.deleteFacilityMembership = async (id) => {
     const result= await FacilityMembership.deleteOne({ _id: id })
     if(result.n ===0){
-        throw { status: false, error: "FacilityMembership Not Found"}
+        throw { success: false, error: "FacilityMembership Not Found"}
     }
     return result
 }

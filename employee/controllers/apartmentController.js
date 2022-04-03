@@ -1,6 +1,6 @@
 const apartmentService = require('../services/apartmentServices')
 
-const getAllApartments = (req, res) => {
+const getAllApartments = (req, res, next) => {
     apartmentService.getAllApartments()
     .then((data)=>{
         res.json(data)
@@ -10,7 +10,7 @@ const getAllApartments = (req, res) => {
     })
 }
 
-const getApartment = (req, res) => {
+const getApartment = (req, res, next) => {
     const {apartmentId} = req.params
     apartmentService.getApartment(apartmentId)
     .then((data)=>{
@@ -21,53 +21,53 @@ const getApartment = (req, res) => {
     })
 }
 
-const createApartment = (req, res) => {
+const createApartment = (req, res, next) => {
     const {code, name, details, floorId, images, status} = req.body
     apartmentService.createApartment({code, name, details, floorId, images, status})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const updateApartment = (req, res) => {
+const updateApartment = (req, res, next) => {
     const {apartmentId} = req.params
     const {code, name, details, floorId, images, status} = req.body
     apartmentService.updateApartment({apartmentId, code, name, details, floorId, images, status})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const deleteApartment = (req, res) => {
+const deleteApartment = (req, res, next) => {
     const {apartmentId} = req.params
     apartmentService.deleteApartment(apartmentId)
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const changeStatus = (req, res) => {
+const changeStatus = (req, res, next) => {
     const {apartmentId} = req.params
     const {status} = req.body
     apartmentService.changeStatus({apartmentId, status})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const getApartmentByFloor = (req, res) => {
+const getApartmentByFloor = (req, res, next) => {
     const {floorId} = req.params
     apartmentService.getApartmentByFloor(floorId)
     .then((data)=>{
@@ -78,7 +78,7 @@ const getApartmentByFloor = (req, res) => {
     })
 }
 
-const getApartmentByBuilding = (req, res) => {
+const getApartmentByBuilding = (req, res, next) => {
     const {buildingId} = req.params
     apartmentService.getApartmentByBuilding(buildingId)
     .then((data)=>{

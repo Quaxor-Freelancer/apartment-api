@@ -13,12 +13,12 @@ exports.getAllResources = async () => {
 
 exports.createResource = async ({ code, title, status }) => {
     if ( !title || !code ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     // check if resource exists
     const resourceExists = await Resource.findOne({ code })
     if (resourceExists) {
-        throw { status: false, error: "Resource code already exists" }
+        throw { success: false, error: "Resource code already exists" }
     }
     // Create resource
     const resource = await Resource.create({
@@ -30,25 +30,25 @@ exports.createResource = async ({ code, title, status }) => {
 exports.findResourceById = async (id) => {
     const resource= await Resource.findById(id)
     if(!resource){
-        throw { status: false, error: "Resource Not Found"}
+        throw { success: false, error: "Resource Not Found"}
     }
     return resource
 }
 
 exports.updateResource = async (id, {code, title, status }) => {
     if  (!title || !code ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     // check if resource exists
     const resourceExists = await Resource.findOne({ code })
     if (resourceExists && resourceExists._id?.toString() !== id) {
-        throw { status: false, error: "Resource code already exists" }
+        throw { success: false, error: "Resource code already exists" }
     }
     const result =await Resource.updateOne({ _id: id }, {
         $set: { code, title, status }
     })
     if(result.n ===0){
-        throw { status: false, error: "Resource Not Found"}
+        throw { success: false, error: "Resource Not Found"}
     }
     return result
 }
@@ -56,7 +56,7 @@ exports.updateResource = async (id, {code, title, status }) => {
 exports.deleteResource = async (id) => {
     const result = await Resource.deleteOne({ _id: id })
     if(result.n ===0){
-        throw { status: false, error: "Resource Not Found"}
+        throw { success: false, error: "Resource Not Found"}
     }
     return result
 }

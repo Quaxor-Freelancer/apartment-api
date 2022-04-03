@@ -29,7 +29,7 @@ const updateResource = (req, res, next) => {
     const { resourceId } = req.params
     resourceServices.updateResource(resourceId, req.body)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 }
@@ -38,16 +38,16 @@ const deleteResource = (req, res, next) => {
     const { resourceId } = req.params
     resourceServices.deleteResource(resourceId)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 };
 
-const changeStatus = (req, res) => {
+const changeStatus = (req, res, next) => {
     const {resourceId} = req.params
     resourceServices.changeStatus(resourceId, req.body)
     .then(()=>{
-        res.status(200).json({status: true})
+        res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 }

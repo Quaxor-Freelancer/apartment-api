@@ -13,12 +13,12 @@ exports.getAllFacilityCategories = async () => {
 
 exports.createFacilityCategory = async ({ code, title, details, icon, status }) => {
     if ( !title || !code ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     // check if facilityCategory exists
     const facilityCategoryExists = await FacilityCategory.findOne({ code })
     if (facilityCategoryExists) {
-        throw { status: false, error: "Facility Category code already exists" }
+        throw { success: false, error: "Facility Category code already exists" }
     }
     // Create facilityCategory
     const facilityCategory = await FacilityCategory.create({
@@ -30,25 +30,25 @@ exports.createFacilityCategory = async ({ code, title, details, icon, status }) 
 exports.findFacilityCategoryById = async (id) => {
     const facilityCategory= await FacilityCategory.findById(id)
     if(!facilityCategory){
-        throw { status: false, error: "Facility category Not Found"}
+        throw { success: false, error: "Facility category Not Found"}
     }
     return facilityCategory
 }
 
 exports.updateFacilityCategory = async (id, {code, title, details, icon, status }) => {
     if  (!title || !code ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     // check if facilityCategory exists
     const facilityCategoryExists = await FacilityCategory.findOne({ code })
     if (facilityCategoryExists && facilityCategoryExists._id?.toString() !== id) {
-        throw { status: false, error: "Facility Category code already exists" }
+        throw { success: false, error: "Facility Category code already exists" }
     }
     const result =await FacilityCategory.updateOne({ _id: id }, {
         $set: { code, title, details, icon, status }
     })
     if(result.n ===0){
-        throw { status: false, error: "Facility category Not Found"}
+        throw { success: false, error: "Facility category Not Found"}
     }
     return result
 }
@@ -56,7 +56,7 @@ exports.updateFacilityCategory = async (id, {code, title, details, icon, status 
 exports.deleteFacilityCategory = async (id) => {
     const result = await FacilityCategory.deleteOne({ _id: id })
     if(result.n ===0){
-        throw { status: false, error: "Facility category Not Found"}
+        throw { success: false, error: "Facility category Not Found"}
     }
     return result
 }

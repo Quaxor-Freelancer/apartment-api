@@ -1,6 +1,6 @@
 const roleServices = require('../services/roleServices')
 
-const getAllRoles= (req, res) => {
+const getAllRoles= (req, res, next) => {
     roleServices.getAllRoles()
     .then((roles)=>{
         return res.status(201).json(roles)
@@ -11,7 +11,7 @@ const getAllRoles= (req, res) => {
     })
 }
 
-const createRole = (req, res) => {
+const createRole = (req, res, next) => {
     const { title, premissions, status } = req.body;
     if ( !title || !premissions ) {
         return res.status(500).send("Bad Request")
@@ -26,7 +26,7 @@ const createRole = (req, res) => {
     })
 }
 
-const findRole = (req, res) => {
+const findRole = (req, res, next) => {
     const { roleId } = req.params
     roleServices.findRoleById(roleId)
     .then((role)=>{
@@ -38,7 +38,7 @@ const findRole = (req, res) => {
     })
 }
 
-const updateRole = (req, res) => {
+const updateRole = (req, res, next) => {
     const { roleId } = req.params
     const {title, premissions, status} = req.body
     if  (!title || !premissions ) {
@@ -52,7 +52,7 @@ const updateRole = (req, res) => {
         if(response.n===0){
             return res.status(201).json({status:false, error:"Role not Found"})
         }
-        return res.status(201).json({status: true})
+        return res.status(201).json({success: true})
     })
     .catch((error)=>{
         console.log(error)
@@ -60,14 +60,14 @@ const updateRole = (req, res) => {
     })
 }
 
-const deleteRole = (req, res) => {
+const deleteRole = (req, res, next) => {
     const { roleId } = req.params
     roleServices.deleteRole(roleId)
     .then((response)=>{
         if(response.n===0){
             return res.status(201).json({status:false, error:"Role not Found"})
         }
-        return res.status(201).json({status: true})
+        return res.status(201).json({success: true})
     })
     .catch((error)=>{
         console.log(error)
@@ -75,7 +75,7 @@ const deleteRole = (req, res) => {
     })
 };
 
-const updateRoleStatus = (req, res) => {
+const updateRoleStatus = (req, res, next) => {
     const { roleId } = req.params
     const {status } = req.body
     if  (status ===undefined) {
@@ -86,7 +86,7 @@ const updateRoleStatus = (req, res) => {
         if(response.n===0){
             return res.status(201).json({status:false, error:"Role not Found"})
         }
-        return res.status(201).json({status: true})
+        return res.status(201).json({success: true})
     })
     .catch((error)=>{
         console.log(error)

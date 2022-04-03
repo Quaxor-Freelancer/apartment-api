@@ -1,7 +1,7 @@
 const authServices = require("../services/authServices")
 // const asyncHandler = require('express-async-handler')
 
-const loginEmployeee = async (req, res) => {
+const loginEmployeee = async (req, res, next) => {
     const { email, password } = req.body;
 
     try {
@@ -12,7 +12,7 @@ const loginEmployeee = async (req, res) => {
     }
 }
 
-const tokenRefresh = (req, res) => {
+const tokenRefresh = (req, res, next) => {
     const { refreshToken } = req.body
     if (!refreshToken) res.sendStatus(401)
     // if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
@@ -20,7 +20,7 @@ const tokenRefresh = (req, res) => {
     res.json({ accessToken })
 }
 
-const forgotPassword = async (req, res) => {
+const forgotPassword = async (req, res, next) => {
     try {
         const { email } = req.body
         if (!email) {
@@ -36,7 +36,7 @@ const forgotPassword = async (req, res) => {
     }
 }
 
-// const getTokenDetail = (req, res) => {
+// const getTokenDetail = (req, res, next) => {
 //     const { tokenBody } = req
 //     authServices.getTokenDetail(tokenBody)
 //         .then(result => {
@@ -48,7 +48,7 @@ const forgotPassword = async (req, res) => {
 //         })
 // }
 
-const verifyOTP = async (req, res) => {
+const verifyOTP = async (req, res, next) => {
     try {
         const { email, OTP } = req.body
         if (!email || !OTP) {
@@ -62,7 +62,7 @@ const verifyOTP = async (req, res) => {
     }
 }
 
-const resetPassword = async (req, res) => {
+const resetPassword = async (req, res, next) => {
     try {
         const { email, OTP, newPassword } = req.body
         if (!email || !OTP || !newPassword) {

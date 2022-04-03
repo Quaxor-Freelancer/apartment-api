@@ -84,10 +84,10 @@ exports.findEmployeeById = async ({ employeeId }) => {
             }
         }
     ])
-    if(!employee){
-        throw { success: false, error: "Facility Not Found", statusCode: 404}
+    if(!employee.length){
+        throw { success: false, error: "Employee Not Found", statusCode: 404}
     }
-    return employee
+    return employee[0]
 }
 
 exports.updateEmployee = async ({ employeeId }, { employeeCode, firstname, lastname, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {

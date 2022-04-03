@@ -69,19 +69,19 @@ exports.getFacilityById = async (id) => {
         }
     ])
     if(!facility){
-        throw { status: false, error: "Facility Not Found"}
+        throw { success: false, error: "Facility Not Found"}
     }
     return facility
 }
 
 exports.createFacility = async (buildingId, {facilityCategoryId, buildingFloorId, code, common, name, details, divisible, items, status }) => {
     if ( !facilityCategoryId || !buildingFloorId || !code || !name ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     // check if facility exists
     const facilityExists = await Facility.findOne({ code })
     if (facilityExists) {
-        throw { status: false, error: "Facility  code already exists" }
+        throw { success: false, error: "Facility  code already exists" }
     }
     // Create facility
     const facility = await Facility.create({
@@ -93,18 +93,18 @@ exports.createFacility = async (buildingId, {facilityCategoryId, buildingFloorId
 
 exports.updateFacility = async ( id, { buildingId, facilityCategoryId, buildingFloorId, code, common, name, details, divisible, items, status }) => {
     if  ( !buildingId || !facilityCategoryId || !buildingFloorId || !code || !name ) {
-        throw {status: false, error: "Bad Request"}
+        throw {success: false, error: "Bad Request"}
     }
     // check if facility exists
     const facilityExists = await Facility.findOne({ code })
     if (facilityExists && facilityExists._id?.toString() !== id) {
-        throw { status: false, error: "Facility code already exists" }
+        throw { success: false, error: "Facility code already exists" }
     }
     const result =await Facility.updateOne({ _id: id }, {
         $set: {buildingId, facilityCategoryId, buildingFloorId, code, common, name, details, divisible, items, status}
     })
     if(result.n ===0){
-        throw { status: false, error: "Facility category Not Found"}
+        throw { success: false, error: "Facility category Not Found"}
     }
     return result
 }
@@ -113,7 +113,7 @@ exports.updateFacility = async ( id, { buildingId, facilityCategoryId, buildingF
 exports.deleteFacility = async (id) => {
     const result = await Facility.deleteOne({ _id: id })
     if(result.n ===0){
-        throw { status: false, error: "Facility Not Found"}
+        throw { success: false, error: "Facility Not Found"}
     }
     return result
 }

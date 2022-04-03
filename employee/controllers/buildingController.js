@@ -1,6 +1,6 @@
 const buildingService = require('../services/buildingService')
 
-const getAllBuildings = (req, res) => {
+const getAllBuildings = (req, res, next) => {
     buildingService.getAllBuildings()
     .then((data)=>{
         res.json(data)
@@ -10,7 +10,7 @@ const getAllBuildings = (req, res) => {
     })
 }
 
-const getBuilding = (req, res) => {
+const getBuilding = (req, res, next) => {
     const {buildingId} = req.params
     buildingService.getBuilding(buildingId)
     .then((data)=>{
@@ -21,53 +21,53 @@ const getBuilding = (req, res) => {
     })
 }
 
-const createBuilding = (req, res) => {
+const createBuilding = (req, res, next) => {
     const {buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds} = req.body
     buildingService.createBuilding({buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const updateBuilding = (req, res) => {
+const updateBuilding = (req, res, next) => {
     const {buildingId} = req.params
     const {buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds} = req.body
     buildingService.updateBuilding({buildingId, buildingServiceCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status, resourceIds})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const deleteBuilding = (req, res) => {
+const deleteBuilding = (req, res, next) => {
     const {buildingId} = req.params
     buildingService.deleteBuilding(buildingId)
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const changeStatus = (req, res) => {
+const changeStatus = (req, res, next) => {
     const {buildingId} = req.params
     const {status} = req.body
     buildingService.changeStatus({buildingId, status})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const getAllFloorByBuilding = (req, res) => {
+const getAllFloorByBuilding = (req, res, next) => {
     const {buildingId} = req.params
     console.log(buildingId)
     buildingService.getAllFloorByBuilding(buildingId)
@@ -79,7 +79,7 @@ const getAllFloorByBuilding = (req, res) => {
     })
 }
 
-const getFloor = (req, res) => {
+const getFloor = (req, res, next) => {
     const {floorId} = req.params
     buildingService.getFloor(floorId)
     .then((data)=>{
@@ -90,47 +90,47 @@ const getFloor = (req, res) => {
     })
 }
 
-const createFloor = (req, res) => {
+const createFloor = (req, res, next) => {
     const {buildingId} = req.params
     const {code, name, details, status, images} = req.body
     buildingService.createFloor({buildingId, code, name, details, status, images})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const updateFloor = (req, res) => {
+const updateFloor = (req, res, next) => {
     const {floorId} = req.params
     const {code, name, details, status, images} = req.body
     buildingService.updateFloor({floorId, code, name, details, status, images})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const deleteFloor = (req, res) => {
+const deleteFloor = (req, res, next) => {
     const {floorId} = req.params
     buildingService.deleteFloor(floorId)
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)
     })
 }
 
-const changeFloorStatus = (req, res) => {
+const changeFloorStatus = (req, res, next) => {
     const {floorId} = req.params
     const {status} = req.body
     buildingService.changeFloorStatus({floorId, status})
     .then(()=>{
-        res.json({status: true})
+        res.json({success: true})
     })
     .catch((err)=>{
         console.log(err)

@@ -29,7 +29,7 @@ const updateFacilityCategory = (req, res, next) => {
     const { facilityCategoryId } = req.params
     facilityCategoryServices.updateFacilityCategory(facilityCategoryId, req.body)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 }
@@ -38,7 +38,7 @@ const deleteFacilityCategory = (req, res, next) => {
     const { facilityCategoryId } = req.params
     facilityCategoryServices.deleteFacilityCategory(facilityCategoryId)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 };

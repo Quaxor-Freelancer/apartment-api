@@ -41,7 +41,7 @@ const updateFacility = (req, res, next) => {
     const { facilityId } = req.params
     facilityServices.updateFacility(facilityId, req.body)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 }
@@ -50,7 +50,7 @@ const deleteFacility = (req, res, next) => {
     const { facilityId } = req.params
     facilityServices.deleteFacility(facilityId)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 };

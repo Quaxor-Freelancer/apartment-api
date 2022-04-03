@@ -58,7 +58,7 @@ const updateFacilityMembership = (req, res, next) => {
     const { membershipId } = req.params
     facilityMembershipServices.updateFacilityMembership(membershipId, req.body)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 }
@@ -70,7 +70,7 @@ const deleteFacilityMembership = (req, res, next) => {
         if(response.n===0){
             return res.status(200).json({status:false, error:"Facility not Found"})
         }
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 };

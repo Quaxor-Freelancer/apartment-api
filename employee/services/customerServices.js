@@ -45,13 +45,13 @@ exports.getAllAppartmentsByCustomer = async (id) => {
 
 exports.createCustomer = async ({ code, firstname, lastname, email, password, phone, address, status }) => {
     if (!code || !firstname || !lastname || !email || !password || !phone) {
-        throw { status: false, error: "Bad Request" }
+        throw { success: false, error: "Bad Request" }
     }
 
     // check if customer exists
     const customerExists = await Customer.findOne({ email })
     if (customerExists) {
-        throw { status: false, error: "Email already exists" }
+        throw { success: false, error: "Email already exists" }
     }
 
     // Hash password
@@ -77,7 +77,7 @@ exports.findCustomerByEamil = async (email) => {
 
 exports.updateCustomer = async (id, { code, firstname, lastname, email, phone, address, status }) => {
     if (!code || !firstname || !lastname || !email || !phone) {
-        throw { status: false, error: "Bad Request" }
+        throw { success: false, error: "Bad Request" }
     }
 
     return Customer.updateOne({ _id: id }, {
@@ -88,7 +88,7 @@ exports.updateCustomer = async (id, { code, firstname, lastname, email, phone, a
 exports.deleteCustomer = async (id) => {
     const result=await Customer.deleteOne({ _id: id })
     if(result.n ===0){
-        throw { status: false, error: "Customer Not Found"}
+        throw { success: false, error: "Customer Not Found"}
     }
     return result
 }
@@ -98,7 +98,7 @@ exports.updateCustomerStatus = async (id, { status }) => {
         $set: { status }
     })
     if(result.n ===0){
-        throw { status: false, error: "Customer Not Found"}
+        throw { success: false, error: "Customer Not Found"}
     }
     return result
 }
@@ -106,7 +106,7 @@ exports.updateCustomerStatus = async (id, { status }) => {
 
 exports.updatePassword = async ({ customerId, password }) => {
     if (!customerId || !password ) {
-        return { status: false, error: "Bad Request" }
+        return { success: false, error: "Bad Request" }
     }
     // Hash password
     const salt = await bcrypt.genSalt(10);
@@ -116,7 +116,7 @@ exports.updatePassword = async ({ customerId, password }) => {
         $set: { password: hashedPassword }
     })
     if(result.n ===0){
-        throw { status: false, error: "Customer Not Found"}
+        throw { success: false, error: "Customer Not Found"}
     }
     return result
 }

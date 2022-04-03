@@ -39,7 +39,7 @@ const updateCustomer = (req, res, next) => {
     const { customerId } = req.params
     customerServices.updateCustomer( customerId,req.body)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 }
@@ -48,7 +48,7 @@ const deleteCustomer = (req, res, next) => {
     const { customerId } = req.params;
     customerServices.deleteCustomer(customerId)
     .then(()=>{
-        return res.status(200).json({status: true})
+        return res.status(200).json({success: true})
     })
     .catch(error=>next(error))
 };
@@ -57,7 +57,7 @@ const updateCustomerStatus = (req, res, next) => {
     const { customerId } = req.params
     customerServices.updateCustomerStatus(customerId, req.body)
     .then(()=>{
-        return res.status(201).json({status: true})
+        return res.status(201).json({success: true})
     })
     .catch(error=>next(error))
 }
@@ -65,7 +65,7 @@ const updateCustomerStatus = (req, res, next) => {
 const updatePassword = (req, res, next) => {
     customerServices.updatePassword(req.body)
     .then(()=>{
-        return res.status(201).json({status: true})
+        return res.status(201).json({success: true})
     })
     .catch(error=>next(error))
 }

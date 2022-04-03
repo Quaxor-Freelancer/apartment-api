@@ -15,7 +15,7 @@ exports.createRole = async ({ title, premissions, status }) => {
     // check if role exists
     const roleExists = await Role.findOne({ title })
     if (roleExists) {
-        return { status: false, error: "Role title already exists" }
+        return { success: false, error: "Role title already exists" }
     }
 
     // Create role
@@ -33,7 +33,7 @@ exports.updateRole = async ({ id, title, premissions, status }) => {
     // check if role exists
     const roleExists = await Role.findOne({ title })
     if (roleExists && roleExists._id?.toString() !== id) {
-        return { status: false, error: "Role title already exists" }
+        return { success: false, error: "Role title already exists" }
     }
     return Role.updateOne({ _id: id }, {
         $set: { title, premissions, status }
