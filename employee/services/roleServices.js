@@ -12,12 +12,9 @@ exports.getAllRoles = async () => {
 }
 
 exports.createRole = async ({ title, premissions, status }) => {
-    // check if role exists
-    const roleExists = await Role.findOne({ title })
-    if (roleExists) {
-        return { success: false, error: "Role title already exists" }
+    if ( !title || !premissions ) {
+        throw { success: false, error:"Bad Request", statusCode: 400 }
     }
-
     // Create role
     const role = await Role.create({
         title, premissions, status
@@ -25,27 +22,25 @@ exports.createRole = async ({ title, premissions, status }) => {
     return role;
 }
 
-exports.findRoleById = async (id) => {
-    return Role.findById(id)
+exports.findRoleById = async ({roleId}) => {
+    return Role.findById(roleId)
 }
 
-exports.updateRole = async ({ id, title, premissions, status }) => {
-    // check if role exists
-    const roleExists = await Role.findOne({ title })
-    if (roleExists && roleExists._id?.toString() !== id) {
-        return { success: false, error: "Role title already exists" }
+exports.updateRole = async ({ roleId},{title, premissions, status }) => {
+    if ( !title || !premissions ) {
+        throw { success: false, error:"Bad Request", statusCode: 400 }
     }
-    return Role.updateOne({ _id: id }, {
+    return Role.updateOne({ _id: roleId }, {
         $set: { title, premissions, status }
     })
 }
 
-exports.deleteRole = async (id) => {
-    return Role.deleteOne({ _id: id })
+exports.deleteRole = async ({ roleId }) => {
+    return Role.deleteOne({ _id: roleId })
 }
 
-exports.updateRoleStatus = async ({ id, status }) => {
-    return Role.updateOne({ _id: id }, {
+exports.updateRoleStatus = async ({ roleId}, {status }) => {
+    return Role.updateOne({ _id: roleId }, {
         $set: { status }
     })
 }

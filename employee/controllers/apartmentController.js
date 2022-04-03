@@ -5,97 +5,71 @@ const getAllApartments = (req, res, next) => {
     .then((data)=>{
         res.json(data)
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const getApartment = (req, res, next) => {
-    const {apartmentId} = req.params
-    apartmentService.getApartment(apartmentId)
+    apartmentService.getApartment(req.params)
     .then((data)=>{
         res.json(data)
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const createApartment = (req, res, next) => {
-    const {code, name, details, floorId, images, status} = req.body
-    apartmentService.createApartment({code, name, details, floorId, images, status})
+    apartmentService.createApartment(req.body)
     .then(()=>{
         res.json({success: true})
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const updateApartment = (req, res, next) => {
-    const {apartmentId} = req.params
-    const {code, name, details, floorId, images, status} = req.body
-    apartmentService.updateApartment({apartmentId, code, name, details, floorId, images, status})
+    apartmentService.updateApartment(req.params, req.body)
     .then(()=>{
         res.json({success: true})
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const deleteApartment = (req, res, next) => {
-    const {apartmentId} = req.params
-    apartmentService.deleteApartment(apartmentId)
+    apartmentService.deleteApartment(req.params)
     .then(()=>{
         res.json({success: true})
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const changeStatus = (req, res, next) => {
-    const {apartmentId} = req.params
-    const {status} = req.body
-    apartmentService.changeStatus({apartmentId, status})
+    apartmentService.changeStatus(req.params, req.body)
     .then(()=>{
         res.json({success: true})
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const getApartmentByFloor = (req, res, next) => {
-    const {floorId} = req.params
-    apartmentService.getApartmentByFloor(floorId)
+    apartmentService.getApartmentByFloor(req.params)
     .then((data)=>{
         res.json(data)
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const getApartmentByBuilding = (req, res, next) => {
-    const {buildingId} = req.params
-    apartmentService.getApartmentByBuilding(buildingId)
+    apartmentService.getApartmentByBuilding(req.params)
     .then((data)=>{
         res.json(data)
     })
-    .catch((err)=>{
-        console.log(err)
-    })
+    .catch(error=>next(error))
 }
 
 const updateApartmentOwner = (req, res, next) => {
-    const { apartmentId} = req.params
-    apartmentService.updateApartmentOwner(apartmentId, req.body)
+    apartmentService.updateApartmentOwner(req.params, req.body)
     .then(()=>{
         res.json({success: true})
     })
-    .catch((err)=>next(err))
+    .catch(error=>next(error))
 }
 
 module.exports = {

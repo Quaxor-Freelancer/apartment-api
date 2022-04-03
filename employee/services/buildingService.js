@@ -16,7 +16,7 @@ exports.createBuilding = ({buildingCode, name, city, country, address, buildingT
     return building.save()
 }
 
-exports.updateBuilding = ({buildingId, buildingCode, name, city, country, address, buildingType, facilityIds = [], floors = [], images, status, resourceIds}) => {
+exports.updateBuilding = ({buildingId}, { buildingCode, name, city, country, address, buildingType, facilityIds = [], floors = [], images, status, resourceIds}) => {
     return Building.updateOne({ _id: buildingId }, {
         $set: {
             buildingCode, 
@@ -34,11 +34,11 @@ exports.updateBuilding = ({buildingId, buildingCode, name, city, country, addres
     })
 }
 
-exports.deleteBuilding = (buildingId) => {
+exports.deleteBuilding = ({buildingId}) => {
     return Building.deleteOne({_id: buildingId})
 }
 
-exports.changeStatus = ({buildingId, status}) => {
+exports.changeStatus = ({buildingId}, {status}) => {
     return Building.updateOne({ _id: buildingId }, {
         $set: {
             status
@@ -47,7 +47,7 @@ exports.changeStatus = ({buildingId, status}) => {
 }
 
 
-exports.getAllFloorByBuilding = (buildingId) => {
+exports.getAllFloorByBuilding = ({buildingId}) => {
     return Building.aggregate([
         {
             $match: {_id: mongoose.Types.ObjectId(buildingId)}
@@ -61,7 +61,7 @@ exports.getAllFloorByBuilding = (buildingId) => {
     ])
 }
 
-exports.getFloor = (floorId) => {
+exports.getFloor = ({floorId} ) => {
     return Building.aggregate([
         {
             $match: {
@@ -88,7 +88,7 @@ exports.getFloor = (floorId) => {
     ])
 }
 
-exports.createFloor = ({buildingId, code, name, details, status, images}) => {
+exports.createFloor = ({buildingId} ,{code, name, details, status, images}) => {
     return Building.updateOne(
         {_id: buildingId},
         {
@@ -114,7 +114,7 @@ exports.deleteFloor = (floorId) => {
     )
 }
 
-exports.updateFloor = ({floorId, code, name, details, status, images}) => {
+exports.updateFloor = ({floorId}, {code, name, details, status, images}) => {
     return Building.updateOne(
         {
             "floors._id": floorId
