@@ -6,7 +6,8 @@ exports.getAllEmployees = async () => {
     const employees = await Employee.aggregate([
         {
             $project: {
-                password: 0
+                password: 0,
+                accountRecovery: 0
             }
         },
         {
@@ -19,10 +20,8 @@ exports.getAllEmployees = async () => {
 }
 
 exports.createEmployee = async ({ employeeCode, firstname, lastname, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
-    // check if employee exists
-    const employeeExists = await Employee.findOne({ email })
-    if (employeeExists) {
-        return { status: false, error: "Email already exists" }
+    if (!employeeCode || !firstname || !lastname || !email || !password || !phone) {
+        throw { success: false, error:"Bad Request", statusCode: 400 }
     }
 
     // Hash password
@@ -41,13 +40,16 @@ exports.createEmployee = async ({ employeeCode, firstname, lastname, email, pass
 }
 
 exports.findEmployeeByEamil = async (email) => {
-    return Employee.findOne({ email }).select('-password')
+    return Employee.findOne({ email }).select({
+        password: 0,
+        accountRecovery: 0
+    })
 }
 
-exports.findEmployeeById = async (id) => {
-    return Employee.aggregate([
+exports.findEmployeeById = async ({ employeeId }) => {
+    const employee =await Employee.aggregate([
         {
-            $match: { _id: mongoose.Types.ObjectId(id) }
+            $match: { _id: mongoose.Types.ObjectId(employeeId) }
         },
         {
             $lookup: {
@@ -76,46 +78,85 @@ exports.findEmployeeById = async (id) => {
         {
             $project: {
                 password: 0,
-                'reportTo.password': 0
+                accountRecovery: 0,
+                'reportTo.password': 0,
+                'reportTo.accountRecovery': 0
             }
         }
     ])
+    if(!employee){
+        throw { success: false, error: "Facility Not Found", statusCode: 404}
+    }
+    return employee
 }
 
-exports.updateEmployee = async ({ id, employeeCode, firstname, lastname, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
-    return Employee.updateOne({ _id: id }, {
+exports.updateEmployee = async ({ employeeId }, { employeeCode, firstname, lastname, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
+    if  (!employeeCode || !firstname || !lastname || !phone) {
+        throw { success: false, error:"Bad Request", statusCode: 400 }
+    }
+    const result=await Employee.updateOne({ _id: employeeId }, {
         $set: { employeeCode, firstname, lastname, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }
     })
+    if(result.n ===0){
+        throw { success: false, error: "Employee Not Found", statusCode: 404}
+    }
+    return result
 }
 
-exports.deleteEmployee = async (id) => {
-    return Employee.deleteOne({ _id: id })
+exports.deleteEmployee = async ({ employeeId }) => {
+    const result =await Employee.deleteOne({ _id: employeeId })
+    if(result.n ===0){
+        throw { success: false, error: "Employee Not Found", statusCode: 404}
+    }
+    return result
 }
 
-exports.updateEmployeeStatus = async ({ id, status }) => {
-    return Employee.updateOne({ _id: id }, {
+exports.updateEmployeeStatus = async ({ employeeId },{status }) => {
+    const result =await Employee.updateOne({ _id: employeeId }, {
         $set: { status }
     })
+    if(result.n ===0){
+        throw { success: false, error: "Employee Not Found", statusCode: 404}
+    }
+    return result
 }
 
-exports.updateEmployeeRole = async ({ id, role }) => {
-    return Employee.updateOne({ _id: id }, {
+exports.updateEmployeeRole = async ({ employeeId },{role }) => {
+    const result =await Employee.updateOne({ _id: employeeId }, {
         $set: { jobRoleId: role }
     })
+    if(result.n ===0){
+        throw { success: false, error: "Employee Not Found", statusCode: 404}
+    }
+    return result
 }
 
-exports.updatePassword = async ({ id, password }) => {
+exports.updatePassword = async ({ employeeId, password }) => {
+    if  (!employeeId || !password) {
+        throw { success: false, error:"Bad Request", statusCode: 400 }
+    }
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    return Employee.updateOne({ _id: id }, {
+    const result =await Employee.updateOne({ _id: employeeId }, {
         $set: { password: hashedPassword }
     })
+    if(result.n ===0){
+        throw { success: false, error: "Employee Not Found", statusCode: 404}
+    }
+    return result
 }
 
-exports.updateEmployeeAccountStatus = async ({ id, loginEnabled }) => {
-    return Employee.updateOne({ _id: id }, {
+exports.updateEmployeeAccountStatus = async ({ employeeId, loginEnabled }) => {
+    if  (!employeeId) {
+        throw { success: false, error:"Bad Request", statusCode: 400 }
+    }
+    const result =await Employee.updateOne({ _id: employeeId }, {
         $set: { loginEnabled }
     })
+    if(result.n ===0){
+        throw { success: false, error: "Employee Not Found", statusCode: 404}
+    }
+    return result
 }

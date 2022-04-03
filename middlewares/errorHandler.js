@@ -7,9 +7,10 @@ function errorHandler(
   console.log(err)
   let customError = err;
   if (err instanceof Error) {
-    customError = { status: 500, error:"Internal Server Error"}
+    customError = { success: false, error:"Internal Server Error"}
   }
-  const statusCode = typeof(customError?.status) === "number" ? customError?.status : 500
+  const statusCode = typeof(customError?.statusCode) === "number" ? customError?.statusCode : 500
+  delete customError?.statusCode
   res.status(statusCode).json(customError);
 };
 
