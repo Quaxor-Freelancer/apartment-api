@@ -26,14 +26,6 @@ exports.findCustomerById = async (id) => {
         {
             $match: { _id: mongoose.Types.ObjectId(id) }
         },
-        // {
-        //     $lookup: {
-        //         from: "roles",
-        //         as: "role",
-        //         localField: "jobRoleId",
-        //         foreignField: "_id"
-        //     }
-        // },
         {
             $project: {
                 password: 0,
@@ -47,21 +39,7 @@ exports.getAllAppartmentsByCustomer = async (id) => {
     return Apartment.aggregate([
         {
             $match: { ownerId: mongoose.Types.ObjectId(id) }
-        },
-        // {
-        //     $lookup: {
-        //         from: "roles",
-        //         as: "role",
-        //         localField: "jobRoleId",
-        //         foreignField: "_id"
-        //     }
-        // },
-        // {
-        //     $project: {
-        //         password: 0,
-        //         accountRecovery: 0
-        //     }
-        // }
+        }
     ])
 }
 
@@ -84,10 +62,10 @@ exports.createCustomer = async ({ code, firstname, lastname, email, password, ph
     let customer = await Customer.create({
         code, firstname, lastname, email, password: hashedPassword, phone, address, status
     })
-
-    delete customer.password
-    delete customer.accountRecovery
-    return customer;
+    let doc = {...customer._doc}
+    delete doc.password
+    delete doc.accountRecovery
+    return doc;
 }
 
 exports.findCustomerByEamil = async (email) => {

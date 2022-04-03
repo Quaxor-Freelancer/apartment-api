@@ -89,6 +89,15 @@ const getApartmentByBuilding = (req, res) => {
     })
 }
 
+const updateApartmentOwner = (req, res, next) => {
+    const { apartmentId} = req.params
+    apartmentService.updateApartmentOwner(apartmentId, req.body)
+    .then(()=>{
+        res.json({success: true})
+    })
+    .catch((err)=>next(err))
+}
+
 module.exports = {
     getAllApartments,
     getApartment,
@@ -97,5 +106,6 @@ module.exports = {
     deleteApartment,
     changeStatus,
     getApartmentByFloor,
-    getApartmentByBuilding
+    getApartmentByBuilding,
+    updateApartmentOwner
 }

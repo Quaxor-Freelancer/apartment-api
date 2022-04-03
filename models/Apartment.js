@@ -18,6 +18,10 @@ const ApartmentSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'buildings'
     },
+    ownerId:  {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'customers'
+    },
     images: [{
         type: String
     }],

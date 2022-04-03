@@ -12,12 +12,12 @@ const getAllEmployees= (req, res) => {
 }
 
 const createEmployee = (req, res) => {
-    const {employeeCode, firstname, lastname, username, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled } = req.body;
-    if (!employeeCode || !firstname || !lastname || !username || !email || !password || !phone) {
+    const {employeeCode, firstname, lastname, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled } = req.body;
+    if (!employeeCode || !firstname || !lastname || !email || !password || !phone) {
         return res.status(500).send("Bad Request")
     }
 
-    employeeServices.createEmployee({ employeeCode, firstname, lastname, username, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled })
+    employeeServices.createEmployee({ employeeCode, firstname, lastname, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled })
     .then((employees)=>{
         return res.status(201).json(employees)
     })
@@ -48,11 +48,11 @@ const findEmployee = (req, res) => {
 
 const updateEmployee = (req, res) => {
     const { employeeId } = req.params
-    const {employeeCode, firstname, lastname, username, email, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled} = req.body
-    if  (!employeeCode || !firstname || !lastname || !username || !phone) {
+    const {employeeCode, firstname, lastname, email, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled} = req.body
+    if  (!employeeCode || !firstname || !lastname || !phone) {
         return res.status(500).send("Bad Request")
     }
-    employeeServices.updateEmployee({id: employeeId, employeeCode, firstname, lastname, username, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled})
+    employeeServices.updateEmployee({id: employeeId, employeeCode, firstname, lastname, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled})
     .then((response)=>{
         if(response.n===0){
             return res.status(201).json({status:false, error:"Employee not Found"})

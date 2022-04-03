@@ -18,7 +18,7 @@ exports.getAllEmployees = async () => {
     return employees;
 }
 
-exports.createEmployee = async ({ employeeCode, firstname, lastname, username, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
+exports.createEmployee = async ({ employeeCode, firstname, lastname, email, password, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
     // check if employee exists
     const employeeExists = await Employee.findOne({ email })
     if (employeeExists) {
@@ -31,9 +31,13 @@ exports.createEmployee = async ({ employeeCode, firstname, lastname, username, e
 
     // Create employee
     const employee = await Employee.create({
-        employeeCode, firstname, lastname, username, email, password: hashedPassword, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled
+        employeeCode, firstname, lastname, email, password: hashedPassword, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled
     })
-    return employee;
+
+    let doc = {...employee._doc}
+    delete doc.password
+    delete doc.accountRecovery
+    return doc;
 }
 
 exports.findEmployeeByEamil = async (email) => {
@@ -78,9 +82,9 @@ exports.findEmployeeById = async (id) => {
     ])
 }
 
-exports.updateEmployee = async ({ id, employeeCode, firstname, lastname, username, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
+exports.updateEmployee = async ({ id, employeeCode, firstname, lastname, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }) => {
     return Employee.updateOne({ _id: id }, {
-        $set: { employeeCode, firstname, lastname, username, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }
+        $set: { employeeCode, firstname, lastname, phone, address, departmentId, jobRoleId, reportToId, status, loginEnabled }
     })
 }
 

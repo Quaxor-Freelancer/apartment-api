@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const useSchema = mongoose.Schema({
     code: {
         type: String,
+        unique: true,
         required: [true, "Please add Department code"]
     },
     title: {

@@ -1,4 +1,5 @@
 const FacilityMembership = require('../../models/FacilityMembership');
+const Facility = require('../../models/Facility');
 const mongoose = require('mongoose');
 
 exports.getAllFacilityMembershipsByApartment = async (id) => {
@@ -51,6 +52,34 @@ exports.getAllFacilityMembershipsByApartmentAndFacility = async (apartmentId, fa
             $match: { 
                 apartmentId: mongoose.Types.ObjectId(apartmentId),
                 facilityId: mongoose.Types.ObjectId(facilityId)
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        }
+    ])
+    return facilityMemberships;
+}
+
+exports.getAllFacilityMembershipsByApartmentAndFacilityCategory = async (apartmentId, facilityCategoryId) => {
+    const facilities = await Facility.aggregate([
+        {
+            $match: { facilityCategoryId: mongoose.Types.ObjectId(facilityCategoryId)}
+        },
+        {
+            $project: {
+                _id: 1
+            }
+        }
+    ])
+    const facilityIds = facilities.map(item=> item._id)
+    const facilityMemberships = await FacilityMembership.aggregate([
+        {
+            $match: { 
+                apartmentId: mongoose.Types.ObjectId(apartmentId),
+                facilityId: { $in: facilityIds }
             }
         },
         {

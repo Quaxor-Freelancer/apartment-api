@@ -60,3 +60,12 @@ exports.getApartmentByBuilding = async(buildingId) => {
         }
     ])
 }
+
+
+exports.updateApartmentOwner = (apartmentId,{ ownerId }) => {
+    return Apartment.updateOne({ _id: apartmentId }, {
+        $set: {
+            ownerId: ownerId || null
+        }
+    })
+}

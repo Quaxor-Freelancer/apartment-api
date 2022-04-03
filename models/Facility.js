@@ -20,6 +20,7 @@ const FacilitySchema =  new Schema({
     },
     code: {
         type: String,
+        unique: true,
         required: true
     },
     common: {

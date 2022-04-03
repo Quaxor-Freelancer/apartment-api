@@ -27,6 +27,15 @@ const getAllFacilityMembershipsByApartmentAndFacility= (req, res, next) => {
     .catch(error=>next(error))
 }
 
+const getAllFacilityMembershipsByApartmentAndFacilityCategory= (req, res, next) => {
+    const { apartmentId, facilityCategoryId } = req.params
+    facilityMembershipServices.getAllFacilityMembershipsByApartmentAndFacilityCategory(apartmentId,facilityCategoryId)
+    .then((facilityMemberships)=>{
+        return res.status(201).json(facilityMemberships)
+    })
+    .catch(error=>next(error))
+}
+
 const createFacilityMembership = (req, res, next) => {
     const { facilityId } = req.params;
     facilityMembershipServices.createFacilityMembership(facilityId, req.body)
@@ -70,7 +79,7 @@ module.exports = {
     getAllFacilityMembershipsByApartment,
     getAllFacilityMembershipsByFacility,
     getAllFacilityMembershipsByApartmentAndFacility,
-    // getAllFacilityMembershipsByApartmentAndFacilityCategory,
+    getAllFacilityMembershipsByApartmentAndFacilityCategory,
     findFacilityMembership,
     createFacilityMembership,
     updateFacilityMembership,

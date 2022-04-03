@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const ResourceSchema = new Schema({
     code: {
         type: String,
+        unique: true,
         required: true
     },
     title: {

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const RoleSchema = new Schema({
     title: {
         type: String,
+        unique: true,
         required: [true, 'Role Title is required']
     },
     premissions: [

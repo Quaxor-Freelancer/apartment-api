@@ -10,5 +10,6 @@ router.put('/status/:apartmentId', apartmentController.changeStatus);
 router.delete('/:apartmentId', apartmentController.deleteApartment);
 router.get("/byBuilding/:apartmentId", apartmentController.getApartmentByBuilding),
 router.get("/byFloor/:floorId", apartmentController.getApartmentByFloor),
+router.put("/owner/:apartmentId", apartmentController.updateApartmentOwner),
 
 module.exports = router;
