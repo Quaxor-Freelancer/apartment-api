@@ -16,5 +16,6 @@ router.use('/resources', require('./resourceRoute'));
 router.use('/facilityCategories', require('./facilityCategoryRoute'));
 router.use('/facilities', require('./facilityRoute'));
 router.use('/facilityMembership', require('./facilityMembershipRoute'));
+router.use('/customers', require('./customerRoute'));
 
 module.exports = router;
