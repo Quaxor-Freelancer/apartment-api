@@ -61,8 +61,8 @@ exports.getAllFloorByBuilding = ({buildingId}) => {
     ])
 }
 
-exports.getFloor = ({floorId} ) => {
-    return Building.aggregate([
+exports.getFloor =async ({floorId} ) => {
+    const floor= await Building.aggregate([
         {
             $match: {
                 'floors._id': mongoose.Types.ObjectId(floorId)
@@ -86,6 +86,11 @@ exports.getFloor = ({floorId} ) => {
             }
         }
     ])
+
+    if(!floor.length){
+        return []
+    }
+    return floor[0]
 }
 
 exports.createFloor = ({buildingId} ,{code, name, details, status, images}) => {
@@ -100,8 +105,7 @@ exports.createFloor = ({buildingId} ,{code, name, details, status, images}) => {
     )
 }
 
-exports.deleteFloor = (floorId) => {
-    console.log(floorId)
+exports.deleteFloor = ({floorId}) => {
     return Building.updateOne(
         {'floors._id': floorId},
         {
@@ -131,7 +135,7 @@ exports.updateFloor = ({floorId}, {code, name, details, status, images}) => {
     )
 }
 
-exports.changeFloorStatus = ({floorId, status}) => {
+exports.changeFloorStatus = ({floorId}, {status}) => {
     return Building.updateOne(
         {
             "floors._id": floorId

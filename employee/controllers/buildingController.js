@@ -50,7 +50,7 @@ const changeStatus = (req, res, next) => {
 }
 
 const getAllFloorByBuilding = (req, res, next) => {
-    buildingService.getAllFloorByBuilding({buildingId})
+    buildingService.getAllFloorByBuilding(req.params)
     .then((data)=>{
         res.json(data)
     })
