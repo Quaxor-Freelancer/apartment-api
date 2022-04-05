@@ -78,7 +78,7 @@ const deleteApartment = (req, res) => {
 const changeStatus = (req, res) => {
     const { apartmentId } = req.params
     const { status } = req.body
-    if (!apartmentId || !status) {
+    if (!apartmentId || status===undefined) {
         return res.status(500).send("Bad Request")
     }
     apartmentService.changeStatus({ apartmentId, status })
@@ -121,6 +121,14 @@ const getApartmentByBuilding = (req, res) => {
             return res.status(500).send("Internal Server Error")
         })
         .catch(error => next(error))
+}
+
+const updateApartmentOwner = (req, res, next) => {
+    apartmentService.updateApartmentOwner(req.params, req.body)
+    .then(()=>{
+        res.json({success: true})
+    })
+    .catch(error=>next(error))
 }
 
 module.exports = {
