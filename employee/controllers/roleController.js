@@ -1,97 +1,51 @@
 const roleServices = require('../services/roleServices')
 
-const getAllRoles= (req, res) => {
+const getAllRoles= (req, res, next) => {
     roleServices.getAllRoles()
     .then((roles)=>{
-        return res.status(201).json(roles)
+        return res.status(200).json(roles)
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const createRole = (req, res) => {
-    const { title, premissions, status } = req.body;
-    if ( !title || !premissions ) {
-        return res.status(500).send("Bad Request")
-    }
-    roleServices.createRole({ title, premissions, status })
-    .then((roles)=>{
-        return res.status(201).json(roles)
-    })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
-}
-
-const findRole = (req, res) => {
-    const { roleId } = req.params
-    roleServices.findRoleById(roleId)
+const createRole = (req, res, next) => {
+    roleServices.createRole(req.body)
     .then((role)=>{
         return res.status(201).json(role)
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const updateRole = (req, res) => {
-    const { roleId } = req.params
-    const {title, premissions, status} = req.body
-    if  (!title || !premissions ) {
-        return res.status(500).send("Bad Request")
-    }
-    roleServices.updateRole({id:roleId, title, premissions, status })
-    .then((response)=>{
-        if(response.error){
-            return res.status(201).json(response)
-        }
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Role not Found"})
-        }
-        return res.status(201).json({status: true})
+const findRole = (req, res, next) => {
+    roleServices.findRoleById(req.params)
+    .then((role)=>{
+        return res.status(201).json(role)
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const deleteRole = (req, res) => {
-    const { roleId } = req.params
-    roleServices.deleteRole(roleId)
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Role not Found"})
-        }
-        return res.status(201).json({status: true})
+const updateRole = (req, res, next) => {
+    roleServices.updateRole( req.params,req.body )
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
+    .catch(error=>next(error))
+}
+
+const deleteRole = (req, res, next) => {
+    roleServices.deleteRole(req.params)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
+    .catch(error=>next(error))
 };
 
-const updateRoleStatus = (req, res) => {
-    const { roleId } = req.params
-    const {status } = req.body
-    if  (status ===undefined) {
-        return res.status(500).send("Bad Request")
-    }
-    roleServices.updateRoleStatus({id:roleId, status})
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Role not Found"})
-        }
-        return res.status(201).json({status: true})
+const updateRoleStatus = (req, res, next) => {
+    roleServices.updateRoleStatus(req.params, req.body)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
 module.exports = {

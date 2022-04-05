@@ -1,160 +1,75 @@
 const employeeServices = require('../services/employeeServices')
 
-const getAllEmployees= (req, res) => {
+const getAllEmployees= (req, res, next) => {
     employeeServices.getAllEmployees()
     .then((employees)=>{
-        return res.status(201).json(employees)
+        return res.status(200).json(employees)
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const createEmployee = (req, res) => {
-    const {employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled } = req.body;
-    if (!employeeCode || !firstname || !lastname || !username || !email || !password || !phone) {
-        return res.status(500).send("Bad Request")
-    }
-
-    employeeServices.createEmployee({ employeeCode, firstname, lastname, username, email, password, phone, address, department, jobRoleId, reportToId, status, loginEnabled })
-    .then((employees)=>{
-        return res.status(201).json(employees)
-    })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
-}
-
-const findEmployee = (req, res) => {
-    const { employeeId } = req.params
-    if (!employeeId) {
-        return res.status(500).send("Bad Request")
-    }
-    employeeServices.findEmployeeById(employeeId)
+const createEmployee = (req, res, next) => {
+    employeeServices.createEmployee(req.body)
     .then((employee)=>{
-        if(employee[0]){
-            return res.status(201).json(employee[0])
-        }else{
-            return res.status(500).json({status:false, error:"Employee Not Found"})
-        }
+        return res.status(201).json(employee)
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const updateEmployee = (req, res) => {
-    const { employeeId } = req.params
-    const {employeeCode, firstname, lastname, username, email, phone, address, department, jobRoleId, reportToId, status, loginEnabled} = req.body
-    if  (!employeeId || !employeeCode || !firstname || !lastname || !username || !email || !phone) {
-        return res.status(500).send("Bad Request")
-    }
-    employeeServices.updateEmployee({id: employeeId, employeeCode, firstname, lastname, username, phone, address, department, jobRoleId, reportToId, status, loginEnabled})
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Employee not Found"})
-        }
-        return res.status(201).json({status: true})
+const findEmployee = (req, res, next) => {
+    employeeServices.findEmployeeById(req.params)
+    .then((employee)=>{
+        return res.status(201).json(employee)
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const deleteEmployee = (req, res) => {
-    const { employeeId } = req.params;
-    if (!employeeId) {
-        return res.status(500).send("Bad Request")
-    }
-    employeeServices.deleteEmployee(employeeId)
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Employee not Found"})
-        }
-        return res.status(201).json({status: true})
+const updateEmployee = (req, res, next) => {
+    employeeServices.updateEmployee(req.params, req.body)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
+    .catch(error=>next(error))
+}
+
+const deleteEmployee = (req, res, next) => {
+    employeeServices.deleteEmployee(req.params)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
+    .catch(error=>next(error))
 };
 
-const updateEmployeeStatus = (req, res) => {
-    const { employeeId } = req.params
-    const {status } = req.body
-    if  (!employeeId || !status) {
-        return res.status(500).send("Bad Request")
-    }
-    employeeServices.updateEmployeeStatus({id:employeeId, status})
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Employee not Found"})
-        }
-        return res.status(201).json({status: true})
+const updateEmployeeStatus = (req, res, next) => {
+    employeeServices.updateEmployeeStatus(req.params, req.body)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const updateEmployeeRole = (req, res) => {
-    const { employeeId } = req.params
-    const { role } = req.body
-    if  (!employeeId || !role) {
-        return res.status(500).send("Bad Request")
-    }
-    employeeServices.updateEmployeeRole({id: employeeId, role})
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Employee not Found"})
-        }
-        return res.status(201).json({status: true})
+const updateEmployeeRole = (req, res, next) => {
+    employeeServices.updateEmployeeRole(req.params, req.body)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const updatePassword = (req, res) => {
-    const { employeeId, password } = req.body
-    if  (!employeeId || !password) {
-        return res.status(500).send("Bad Request")
-    }
-    employeeServices.updatePassword({id: employeeId, password})
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Employee not Found"})
-        }
-        return res.status(201).json({status: true})
+const updatePassword = (req, res, next) => {
+    employeeServices.updatePassword(req.body)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
-const updateEmployeeAccountStatus = (req, res) => {
-    const { employeeId, loginEnabled } = req.body
-    if  (!employeeId || (loginEnabled===undefined)) {
-        return res.status(500).send("Bad Request")
-    }
-    employeeServices.updateEmployeeAccountStatus({id:employeeId, loginEnabled})
-    .then((response)=>{
-        if(response.n===0){
-            return res.status(201).json({status:false, error:"Employee not Found"})
-        }
-        return res.status(201).json({status: true})
+const updateEmployeeAccountStatus = (req, res, next) => {
+    employeeServices.updateEmployeeAccountStatus(req.body)
+    .then(()=>{
+        return res.status(201).json({success: true})
     })
-    .catch((error)=>{
-        console.log(error)
-        return res.status(500).send("Internal Server Error")
-    })
+    .catch(error=>next(error))
 }
 
 module.exports = {

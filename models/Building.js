@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Image = require('./schemas/Image')
 
 const FloorSchema =  new Schema({
     code: {
@@ -49,12 +50,7 @@ const BuildingSchema = new Schema({
         enum: ['new', 'upcoming', 'future', 'default'],
         default: 'default'
     },
-    facilityIds: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'facilities'
-        }
-    ],
+    resourceIds: [mongoose.Schema.Types.ObjectId],
     floors: [FloorSchema],
     images: [{
         type: String

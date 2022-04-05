@@ -6,7 +6,7 @@ exports.getAllApartments = () => {
     return Apartment.find()
 }
 
-exports.getApartment = (apartmentId) => {
+exports.getApartment = ({apartmentId}) => {
     return Apartment.findById(apartmentId)
 }
 
@@ -17,7 +17,7 @@ exports.createApartment = ({code, name, details, floorId, images, status}) => {
     return building.save()
 }
 
-exports.updateApartment = ({apartmentId, code, name, details, floorId, images, status}) => {
+exports.updateApartment = ({apartmentId}, {code, name, details, floorId, images, status}) => {
     return Apartment.updateOne({ _id: apartmentId }, {
         $set: {
             code, name, details, floorId, images, status
@@ -25,11 +25,11 @@ exports.updateApartment = ({apartmentId, code, name, details, floorId, images, s
     })
 }
 
-exports.deleteApartment = (apartmentId) => {
+exports.deleteApartment = ({apartmentId}) => {
     return Apartment.deleteOne({_id: apartmentId})
 }
 
-exports.changeStatus = ({apartmentId, status}) => {
+exports.changeStatus = ({apartmentId}, {status}) => {
     return Apartment.updateOne({ _id: apartmentId }, {
         $set: {
             status
@@ -37,17 +37,17 @@ exports.changeStatus = ({apartmentId, status}) => {
     })
 }
 
-exports.getApartmentByFloor = (floorId) => {//*
+exports.getApartmentByFloor = ({floorId}) => {
     return Apartment.aggregate([
         {
             $match: {
-                floorId
+                floorId: mongoose.Types.ObjectId(floorId)
             }
         }
     ])
 }
 
-exports.getApartmentByBuilding = async(buildingId) => {
+exports.getApartmentByBuilding = async({buildingId}) => {
     const building = await Building.findById(buildingId)
     const floorIds = building.floors.map((floor)=>{
         return floor._id
@@ -59,4 +59,12 @@ exports.getApartmentByBuilding = async(buildingId) => {
             }
         }
     ])
+}
+
+exports.updateApartmentOwner = ({apartmentId},{ ownerId }) => {
+    return Apartment.updateOne({ _id: apartmentId }, {
+        $set: {
+            ownerId: ownerId || null
+        }
+    })
 }

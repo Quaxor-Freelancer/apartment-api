@@ -1,11 +1,18 @@
 const userService = require('../services/userService')
 
-const getMe = (req, res) => {
+const getMe = (req, res, next) => {
     const user = req.user;
-    res.json(user)
+    userService.getMe(user)
+        .then(result => {
+            res.json(result)
+        })
+        .catch(e => {
+            console.log(e)
+            res.status(500).send("An Error occured")
+        })
 }
 
-const updateInfo = (req, res) => {
+const updateInfo = (req, res, next) => {
     const { _id: id } = req.user
     const { firstname, lastname, phone, address } = req.body;
     userService.updateInfo(id, { firstname, lastname, phone, address })
@@ -18,7 +25,7 @@ const updateInfo = (req, res) => {
         })
 }
 
-const changePassword = async (req, res) => {
+const changePassword = async (req, res, next) => {
     const { _id: id } = req.user
     // console.log(req.user)
     const { oldPassword, newPassword } = req.body

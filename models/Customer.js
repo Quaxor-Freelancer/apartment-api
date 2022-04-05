@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const useSchema = mongoose.Schema({
-    employeeCode: {
+    code: {
         type: String,
         unique: true,
-        required: [true, "Please add Employee Code"]
+        required: [true, "Please add Customer Code"]
     },
     firstname: {
         type: String,
@@ -30,27 +30,9 @@ const useSchema = mongoose.Schema({
     address: {
         type: String,
     },
-    departmentId: {
-        type: mongoose.Types.ObjectId,
-        ref: "Department"
-    },
-    jobRoleId: {
-        type: mongoose.Types.ObjectId,
-        ref: "Role"
-    },
-    reportToId: {
-        type: mongoose.Types.ObjectId,
-        ref: "Employee"
-    },
     status: {
-        type: String,
-        enum: ["active", "leave", "absent", "terminated"],
-        required: [true],
-        default: "active"
-    },
-    loginEnabled: {
         type: Boolean,
-        default: false
+        default: true
     },
     accountRecovery: {
         OTP: {
@@ -64,7 +46,7 @@ const useSchema = mongoose.Schema({
     }
 }, { timestamps: true })
 
-module.exports = mongoose.model("Employee", useSchema);
+module.exports = mongoose.model("Customer", useSchema);
 
 
 
