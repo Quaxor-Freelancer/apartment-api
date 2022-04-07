@@ -2,8 +2,7 @@ const Employee = require('../../models/Employee');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose')
 
-exports.getMe = ({ _id }) => {
-    console.log(_id)
+exports.getMe = (_id) => {
     return Employee.aggregate([
         {
             $match: { _id: mongoose.Types.ObjectId(_id) }
