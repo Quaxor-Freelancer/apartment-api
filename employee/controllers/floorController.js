@@ -1,11 +1,11 @@
-const floorService = require('../services/buildingService')
+const floorService = require('../services/floorService')
 
 const getAllFloorByBuilding = (req, res) => {
     const { buildingId } = req.params
     if (!buildingId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.getAllFloorByBuilding({buildingId})
+    floorService.getAllFloorByBuilding({buildingId})
         .then((data) => {
             res.status(201).json(data[0].floors)
         })
@@ -20,7 +20,7 @@ const getFloor = (req, res) => {
     if (!floorId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.getFloor({floorId})
+    floorService.getFloor({floorId})
         .then((data) => {
             res.status(201).json(data.floor)
         })
@@ -36,7 +36,7 @@ const createFloor = (req, res) => {
     if (!buildingId || !code || !name) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.createFloor({ buildingId, code, name, details, status, images })
+    floorService.createFloor({ buildingId, code, name, details, status, images })
         .then(() => {
             res.json({ status: true })
         })
@@ -53,7 +53,7 @@ const updateFloor = (req, res) => {
     if (!floorId || !code || !name) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.updateFloor({ floorId, code, name, details, status, images })
+    floorService.updateFloor({ floorId, code, name, details, status, images })
         .then(() => {
             res.json({ status: true })
         })
@@ -69,7 +69,7 @@ const deleteFloor = (req, res) => {
     if (!floorId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.deleteFloor({floorId})
+    floorService.deleteFloor({floorId})
         .then(() => {
             res.json({ status: true })
         })
@@ -86,7 +86,7 @@ const changeFloorStatus = (req, res) => {
     if (!buildingId || !status) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.changeFloorStatus({ floorId, status })
+    floorService.changeFloorStatus({ floorId, status })
         .then(() => {
             res.json({ status: true })
         })
