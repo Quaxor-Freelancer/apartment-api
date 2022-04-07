@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const buildingController = require('../controllers/buildingController')
+const floorController = require('../controllers/floorController')
 
-router.get('/:floorId', buildingController.getFloor);
-router.get('/byBuilding/:buildingId', buildingController.getAllFloorByBuilding);
-router.post('/:buildingId', buildingController.createFloor);
-router.put('/:floorId', buildingController.updateFloor);
-router.put('/status/:floorId', buildingController.changeFloorStatus);
-router.delete('/:floorId', buildingController.deleteFloor);
+router.get('/:floorId', floorController.getFloor);
+router.get('/byBuilding/:buildingId', floorController.getAllFloorByBuilding);
+router.post('/:buildingId', floorController.createFloor);
+router.put('/:floorId', floorController.updateFloor);
+router.put('/status/:floorId', floorController.changeFloorStatus);
+router.delete('/:floorId', floorController.deleteFloor);
 
 module.exports = router;

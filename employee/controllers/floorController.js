@@ -1,25 +1,13 @@
-const buildingService = require('../services/buildingService')
+const floorService = require('../services/buildingService')
 
-const getAllBuildings = (req, res, next) => {
-    buildingService.getAllBuildings()
-        .then((data) => {
-            res.status(201).json(data)
-        })
-        .catch((err) => {
-            console.log(err)
-            return res.status(500).send("Internal Server Error")
-        })
-}
-
-const getBuilding = (req, res, next) => {
+const getAllFloorByBuilding = (req, res) => {
     const { buildingId } = req.params
     if (!buildingId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.getBuilding({buildingId})
+    buildingService.getAllFloorByBuilding({buildingId})
         .then((data) => {
-            console.log(data)
-            res.status(201).json(data)
+            res.status(201).json(data[0].floors)
         })
         .catch((err) => {
             console.log(err)
@@ -27,12 +15,28 @@ const getBuilding = (req, res, next) => {
         })
 }
 
-const createBuilding = (req, res) => {
-    const { buildingCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status } = req.body
-    if (!name) {
+const getFloor = (req, res) => {
+    const { floorId } = req.params
+    if (!floorId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.createBuilding({ buildingCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status })
+    buildingService.getFloor({floorId})
+        .then((data) => {
+            res.status(201).json(data.floor)
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).send("Internal Server Error")
+        })
+}
+
+const createFloor = (req, res) => {
+    const { buildingId } = req.params
+    const { code, name, details, status, images } = req.body
+    if (!buildingId || !code || !name) {
+        return res.status(500).send("Bad Request")
+    }
+    buildingService.createFloor({ buildingId, code, name, details, status, images })
         .then(() => {
             res.json({ status: true })
         })
@@ -43,13 +47,13 @@ const createBuilding = (req, res) => {
         .catch(error => next(error))
 }
 
-const updateBuilding = (req, res) => {
-    const { buildingId } = req.params
-    const { buildingCode, name, city, country, address, buildingType, facilityIds, floors, images, status } = req.body
-    if (!buildingId || !name) {
+const updateFloor = (req, res) => {
+    const { floorId } = req.params
+    const { code, name, details, status, images } = req.body
+    if (!floorId || !code || !name) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.updateBuilding({ buildingId, buildingCode, name, city, country, address, buildingType, facilityIds, floors, images, status })
+    buildingService.updateFloor({ floorId, code, name, details, status, images })
         .then(() => {
             res.json({ status: true })
         })
@@ -60,12 +64,12 @@ const updateBuilding = (req, res) => {
         .catch(error => next(error))
 }
 
-const deleteBuilding = (req, res) => {
-    const { buildingId } = req.params
-    if (!buildingId) {
+const deleteFloor = (req, res) => {
+    const { floorId } = req.params
+    if (!floorId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.deleteBuilding({buildingId})
+    buildingService.deleteFloor({floorId})
         .then(() => {
             res.json({ status: true })
         })
@@ -76,13 +80,13 @@ const deleteBuilding = (req, res) => {
         .catch(error => next(error))
 }
 
-const changeStatus = (req, res) => {
-    const { buildingId } = req.params
+const changeFloorStatus = (req, res) => {
+    const { floorId } = req.params
     const { status } = req.body
     if (!buildingId || !status) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.changeStatus({ buildingId, status })
+    buildingService.changeFloorStatus({ floorId, status })
         .then(() => {
             res.json({ status: true })
         })
@@ -93,12 +97,11 @@ const changeStatus = (req, res) => {
         .catch(error => next(error))
 }
 
-
 module.exports = {
-    getAllBuildings,
-    getBuilding,
-    createBuilding,
-    updateBuilding,
-    deleteBuilding,
-    changeStatus
+    getAllFloorByBuilding,
+    getFloor,
+    createFloor,
+    updateFloor,
+    deleteFloor,
+    changeFloorStatus
 }
