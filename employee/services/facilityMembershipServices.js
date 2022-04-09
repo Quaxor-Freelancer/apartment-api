@@ -93,7 +93,7 @@ exports.getAllFacilityMembershipsByApartmentAndFacilityCategory = async (apartme
 }
 
 exports.createFacilityMembership = async (facilityId, { facilityItemId, apartmentId, type, membership, status }) => {
-    if (!facilityId || !apartmentId || !type || !membership) {
+    if (!facilityId || !apartmentId || !type) {
         throw { success: false, error: "Bad Request" }
     }
     if (!validateMembership(type, membership)) {
@@ -138,7 +138,7 @@ exports.findFacilityMembership = async (id) => {
 }
 
 exports.updateFacilityMembership = async (id, { facilityId, facilityItemId, apartmentId, type, membership, status }) => {
-    if (!facilityId || !apartmentId || !type || !membership) {
+    if (!facilityId || !apartmentId || !type) {
         throw { success: false, error: "Bad Request" }
     }
     if (!validateMembership(type, membership)) {
@@ -163,7 +163,7 @@ const validateMembership = (type, membership) => {
         return false
     }
 
-    if (type === "fultime" && (!membership || !Object.keys(membership).length)) {
+    if (type === "fulltime" && (!membership || !Object.keys(membership).length)) {
         return true
     }
 

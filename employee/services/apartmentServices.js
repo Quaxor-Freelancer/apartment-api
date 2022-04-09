@@ -22,9 +22,20 @@ exports.getApartment = (apartmentId) => {
             }
         },
         {
+            $lookup: {
+                from: 'customers',
+                localField: 'ownerId',
+                foreignField: '_id',
+                as: 'owner'
+            }
+        },
+        {
             $addFields: {
                 building: {
                     $arrayElemAt: ['$building', 0]
+                },
+                owner: {
+                    $arrayElemAt: ['$owner', 0]
                 }
             }
         },
@@ -96,7 +107,9 @@ exports.getApartment = (apartmentId) => {
         {
             $project: {
                 facilities: 0,
-                'building.floors': 0
+                'building.floors': 0,
+                'owner.password': 0,
+                'owner.accountRecovery': 0
             }
         }
     ]).then(data => data[0])
