@@ -99,7 +99,7 @@ exports.getApartment = (apartmentId) => {
                 'building.floors': 0
             }
         }
-    ])
+    ]).then(data => data[0])
 }
 
 exports.createApartment = ({ code, name, details, floorId, ownerId, buildingId, status }) => {
