@@ -4,15 +4,22 @@ const timeSchema = require('./schemas/Time')
 const facilityMembershipSchema = mongoose.Schema({
     facilityId: {
         type: mongoose.Types.ObjectId,
+        ref: 'Facility',
+        required: true
+    },
+    facilityItemId: {
+        type: mongoose.Types.ObjectId,
         ref: 'Facility'
     },
     apartmentId: {
         type: mongoose.Types.ObjectId,
-        ref: 'Apartment'
+        ref: 'Apartment',
+        required: true
     },
     type: {
         type: String,
-        enum: ["fulltime", "weekly", "monthly", "once"]
+        enum: ["fulltime", "weekly", "monthly", "once"],
+        required: true
     },
     membership: {
         weekly: [{
