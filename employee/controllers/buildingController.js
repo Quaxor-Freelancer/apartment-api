@@ -28,11 +28,11 @@ const getBuilding = (req, res, next) => {
 }
 
 const createBuilding = (req, res) => {
-    const { buildingCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status } = req.body
+    const { buildingCode, name, city, country, address, buildingServiceType, facilityIds, floors, status } = req.body
     if (!name) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.createBuilding({ buildingCode, name, city, country, address, buildingServiceType, facilityIds, floors, images, status })
+    buildingService.createBuilding({ buildingCode, name, city, country, address, buildingServiceType, facilityIds, floors, status })
         .then(() => {
             res.json({ status: true })
         })
@@ -45,11 +45,11 @@ const createBuilding = (req, res) => {
 
 const updateBuilding = (req, res) => {
     const { buildingId } = req.params
-    const { buildingCode, name, city, country, address, buildingType, facilityIds, floors, images, status } = req.body
+    const { buildingCode, name, city, country, address, buildingType, facilityIds, floors, status } = req.body
     if (!buildingId || !name) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.updateBuilding({ buildingId, buildingCode, name, city, country, address, buildingType, facilityIds, floors, images, status })
+    buildingService.updateBuilding({ buildingId, buildingCode, name, city, country, address, buildingType, facilityIds, floors, status })
         .then(() => {
             res.json({ status: true })
         })

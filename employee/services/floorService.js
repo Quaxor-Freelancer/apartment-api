@@ -116,12 +116,12 @@ exports.getFloor = async ({ floorId }) => {
     return (floor[0] || null)
 }
 
-exports.createFloor = ({ buildingId, code, name, details, status, images }) => {
+exports.createFloor = ({ buildingId, code, name, details, status }) => {
     return Building.updateOne(
         { _id: buildingId },
         {
             $push: {
-                floors: { code, name, details, status, images }
+                floors: { code, name, details, status }
             }
         }
 
@@ -141,7 +141,7 @@ exports.deleteFloor = ({ floorId }) => {
     )
 }
 
-exports.updateFloor = ({ floorId, code, name, details, status, images }) => {
+exports.updateFloor = ({ floorId, code, name, details, status }) => {
     return Building.updateOne(
         {
             "floors._id": floorId
@@ -151,8 +151,7 @@ exports.updateFloor = ({ floorId, code, name, details, status, images }) => {
                 "floors.$.name": name,
                 "floors.$.code": code,
                 "floors.$.details": details,
-                "floors.$.status": status,
-                "floors.$.images": images
+                "floors.$.status": status
             }
         }
     )
