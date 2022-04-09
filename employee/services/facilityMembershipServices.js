@@ -128,7 +128,21 @@ exports.findFacilityMembership = async (id) => {
             }
         },
         {
-            $limit: 1
+            $addFields: {
+                facility: { $arrayElemAt: ['$facility', 0] },
+                apartment: { $arrayElemAt: ['$apartment', 0] },
+                facilityItem: {
+                    $arrayElemAt: [{
+                        $filter: {
+                            input: '$facility.items',
+                            as: 'item',
+                            cond: {
+                                eq: ['$$item._id', '$facilityItemId']
+                            }
+                        }
+                    }, 0]
+                }
+            }
         }
     ])
     if (!facilityMemberships[0]) {
