@@ -29,7 +29,7 @@ exports.getMe = (_id) => {
                 'reportTo.password': 0
             }
         }
-    ])
+    ]).then(data => data[0])
 }
 
 exports.changeInfo = (employeeId, { firstname, lastname, phone, address }) => {
