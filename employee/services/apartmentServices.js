@@ -10,17 +10,17 @@ exports.getApartment = (apartmentId) => {
     return Apartment.findById(apartmentId)
 }
 
-exports.createApartment = ({code, name, details, floorId, images, status}) => {
-    const building = new Apartment({
-        code, name, details, floorId, images, status
+exports.createApartment = ({code, name, details, floorId, ownerId, buildingId, status}) => {
+    const apartment = new Apartment({
+        code, name, details, floorId, buildingId, ownerId, status
     })
-    return building.save()
+    return apartment.save()
 }
 
-exports.updateApartment = ({apartmentId, code, name, details, floorId, images, status}) => {
+exports.updateApartment = ({apartmentId, code, name, details, floorId, ownerId, buildingId, status}) => {
     return Apartment.updateOne({ _id: apartmentId }, {
         $set: {
-            code, name, details, floorId, images, status
+            code, name, details, floorId, buildingId, ownerId, status
         }
     })
 }
@@ -48,14 +48,10 @@ exports.getApartmentByFloor = (floorId) => {
 }
 
 exports.getApartmentByBuilding = async(buildingId) => {
-    const building = await Building.findById(buildingId)
-    const floorIds = building?.floors.map((floor)=>{
-        return floor._id
-    }) || []
     return Apartment.aggregate([ 
         {
             $match: {
-                floorId: {$in: floorIds}
+                buildingId: mongoose.Types.ObjectId(buildingId)
             }
         }
     ])

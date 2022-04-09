@@ -27,13 +27,13 @@ const getApartment = (req, res) => {
 }
 
 const createApartment = (req, res) => {
-    const { code, name, details, floorId, images, status } = req.body
+    const { code, name, details, buildingId, floorId, ownerId, status } = req.body
     if (!code | !name || !floorId) {
         return res.status(500).send("Bad Request")
     }
-    apartmentService.createApartment({ code, name, details, floorId, images, status })
-        .then(() => {
-            res.json({ status: true })
+    apartmentService.createApartment({ code, name, details, floorId, buildingId, ownerId, status })
+        .then((apartment) => {
+            res.json(apartment)
         })
         .catch((err) => {
             console.log(err)
@@ -44,11 +44,11 @@ const createApartment = (req, res) => {
 
 const updateApartment = (req, res) => {
     const { apartmentId } = req.params
-    const { code, name, details, floorId, images, status } = req.body
+    const { code, name, details, floorId, buildingId, ownerId, status } = req.body
     if (!apartmentId || !code | !name || !floorId) {
         return res.status(500).send("Bad Request")
     }
-    apartmentService.updateApartment({ apartmentId, code, name, details, floorId, images, status })
+    apartmentService.updateApartment({ apartmentId, code, name, details, floorId, buildingId, ownerId, status })
         .then(() => {
             res.json({ status: true })
         })

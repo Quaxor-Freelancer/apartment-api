@@ -61,7 +61,7 @@ exports.getAllFloorByBuilding = ({buildingId}) => {
     ])
 }
 
-exports.getFloor =async ({floorId} ) => {
+exports.getFloor =async (floorId) => {
     const floor= await Building.aggregate([
         {
             $match: {

@@ -14,9 +14,15 @@ const ApartmentSchema = new Schema({
         type: String,
         required: false
     },
+    buildingId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'buildings',
+        required: true
+    },
     floorId:  {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'buildings'
+        ref: 'buildings',
+        required: true
     },
     ownerId:  {
         type: mongoose.Schema.Types.ObjectId,

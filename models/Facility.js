@@ -13,7 +13,7 @@ const FacilitySchema =  new Schema({
         ref: 'Building',
         required: true
     },
-    buildingFloorId: {
+    floorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Building',
         required: true
