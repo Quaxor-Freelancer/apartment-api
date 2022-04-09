@@ -7,7 +7,7 @@ const RoleSchema = new Schema({
         unique: true,
         required: [true, 'Role Title is required']
     },
-    premissions: [
+    permissions: [
         {
             type: String
         }

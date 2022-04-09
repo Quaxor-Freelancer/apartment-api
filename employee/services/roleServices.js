@@ -11,13 +11,13 @@ exports.getAllRoles = async () => {
     return roles;
 }
 
-exports.createRole = async ({ title, premissions, status }) => {
-    if ( !title || !premissions ) {
+exports.createRole = async ({ title, permissions, status }) => {
+    if ( !title || !permissions ) {
         throw { success: false, error:"Bad Request", statusCode: 400 }
     }
     // Create role
     const role = await Role.create({
-        title, premissions, status
+        title, permissions, status
     })
     return role;
 }
@@ -26,12 +26,12 @@ exports.findRoleById = async ({roleId}) => {
     return Role.findById(roleId)
 }
 
-exports.updateRole = async ({ roleId},{title, premissions, status }) => {
-    if ( !title || !premissions ) {
+exports.updateRole = async ({ roleId},{title, permissions, status }) => {
+    if ( !title || !permissions ) {
         throw { success: false, error:"Bad Request", statusCode: 400 }
     }
     return Role.updateOne({ _id: roleId }, {
-        $set: { title, premissions, status }
+        $set: { title, permissions, status }
     })
 }
 
