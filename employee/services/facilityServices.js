@@ -124,6 +124,14 @@ exports.getFacilityById = async (id) => {
         },
         {
             $lookup: {
+                from: "facilitycategories",
+                as: 'facilityCategory',
+                localField: 'facilityCategoryId',
+                foreignField: '_id'
+            }
+        },
+        {
+            $lookup: {
                 from: "buildings",
                 as: 'building',
                 localField: 'buildingId',
@@ -131,11 +139,44 @@ exports.getFacilityById = async (id) => {
             }
         },
         {
+            $addFields: {
+                building: {
+                    $arrayElemAt: ['$building', 0]
+                },
+                facilityCategory: {
+                    $arrayElemAt: ['$facilityCategory', 0]
+                }
+            }
+        },
+        {
+            $addFields: {
+                floor: {
+                    $arrayElemAt: [
+                        {
+                            $filter: {
+                                input: '$building.floors',
+                                as: 'floor',
+                                cond: {
+                                    $eq: ['$$floor._id', '$floorId']
+                                }
+                            }
+                        },
+                        0
+                    ]
+                }
+            }
+        },
+        {
             $lookup: {
-                from: "facilitycategories",
-                as: 'facilityCategory',
-                localField: 'facilityCategoryId',
-                foreignField: '_id'
+                from: 'facilitymemberships',
+                localField: '_id',
+                foreignField: 'facilityId',
+                as: 'facilityMemberships'
+            }
+        },
+        {
+            $project: {
+                'building.floors': 0
             }
         }
     ])
