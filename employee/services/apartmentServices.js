@@ -7,17 +7,109 @@ exports.getAllApartments = () => {
 }
 
 exports.getApartment = (apartmentId) => {
-    return Apartment.findById(apartmentId)
+    return Apartment.aggregate([
+        {
+            $match: {
+                _id: mongoose.Types.ObjectId(apartmentId)
+            }
+        },
+        {
+            $lookup: {
+                from: 'buildings',
+                localField: 'floorId',
+                foreignField: 'floors._id',
+                as: 'building'
+            }
+        },
+        {
+            $addFields: {
+                building: {
+                    $arrayElemAt: ['$building', 0]
+                }
+            }
+        },
+        {
+            $addFields: {
+                floor: {
+                    $arrayElemAt: [
+                        {
+                            $filter: {
+                                input: '$building.floors',
+                                as: 'floor',
+                                cond: {
+                                    $eq: ['$$floor._id', '$floorId']
+                                }
+                            }
+                        },
+                        0
+                    ]
+                }
+            }
+        },
+        {
+            $lookup: {
+                from: 'facilitymemberships',
+                localField: '_id',
+                foreignField: 'apartmentId',
+                as: 'facilityMemberships'
+            }
+        },
+        {
+            $lookup: {
+                from: 'facilities',
+                localField: 'facilityMemberships.facilityId',
+                foreignField: '_id',
+                as: 'facilities'
+            }
+        },
+        {
+            $addFields: {
+                facilityMemberships: {
+                    $map: {
+                        input: '$facilityMemberships',
+                        as: 'facilityMembership',
+                        in: {
+                            $mergeObjects: [
+                                '$$facilityMembership',
+                                {
+                                    facility: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: '$facilities',
+                                                    as: 'facility',
+                                                    cond: [{
+                                                        $eq: ['$$facility._id', '$$facilityMembership.facilityId']
+                                                    }]
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                facilities: 0,
+                'building.floors': 0
+            }
+        }
+    ])
 }
 
-exports.createApartment = ({code, name, details, floorId, ownerId, buildingId, status}) => {
+exports.createApartment = ({ code, name, details, floorId, ownerId, buildingId, status }) => {
     const apartment = new Apartment({
         code, name, details, floorId, buildingId, ownerId, status
     })
     return apartment.save()
 }
 
-exports.updateApartment = ({apartmentId, code, name, details, floorId, ownerId, buildingId, status}) => {
+exports.updateApartment = ({ apartmentId, code, name, details, floorId, ownerId, buildingId, status }) => {
     return Apartment.updateOne({ _id: apartmentId }, {
         $set: {
             code, name, details, floorId, buildingId, ownerId, status
@@ -26,10 +118,10 @@ exports.updateApartment = ({apartmentId, code, name, details, floorId, ownerId, 
 }
 
 exports.deleteApartment = (apartmentId) => {
-    return Apartment.deleteOne({_id: apartmentId})
+    return Apartment.deleteOne({ _id: apartmentId })
 }
 
-exports.changeStatus = ({apartmentId , status}) => {
+exports.changeStatus = ({ apartmentId, status }) => {
     return Apartment.updateOne({ _id: apartmentId }, {
         $set: {
             status
@@ -47,8 +139,8 @@ exports.getApartmentByFloor = (floorId) => {
     ])
 }
 
-exports.getApartmentByBuilding = async(buildingId) => {
-    return Apartment.aggregate([ 
+exports.getApartmentByBuilding = async (buildingId) => {
+    return Apartment.aggregate([
         {
             $match: {
                 buildingId: mongoose.Types.ObjectId(buildingId)
@@ -57,7 +149,7 @@ exports.getApartmentByBuilding = async(buildingId) => {
     ])
 }
 
-exports.updateApartmentOwner = ({apartmentId},{ ownerId }) => {
+exports.updateApartmentOwner = ({ apartmentId }, { ownerId }) => {
     return Apartment.updateOne({ _id: apartmentId }, {
         $set: {
             ownerId: ownerId || null
