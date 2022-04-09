@@ -124,6 +124,22 @@ exports.getFacilityById = async (id) => {
         },
         {
             $lookup: {
+                from: 'facilitymemberships',
+                localField: '_id',
+                foreignField: 'facilityId',
+                as: 'facilityMemberships'
+            }
+        },
+        {
+            $lookup: {
+                from: 'apartments',
+                localField: 'facilityMemberships.apartmentId',
+                foreignField: '_id',
+                as: 'apartments'
+            }
+        },
+        {
+            $lookup: {
                 from: "facilitycategories",
                 as: 'facilityCategory',
                 localField: 'facilityCategoryId',
@@ -145,6 +161,33 @@ exports.getFacilityById = async (id) => {
                 },
                 facilityCategory: {
                     $arrayElemAt: ['$facilityCategory', 0]
+                },
+                facilityMemberships: {
+                    $map: {
+                        input: '$facilityMemberships',
+                        as: 'facilityMembership',
+                        in: {
+                            $mergeObjects: [
+                                '$$facilityMembership',
+                                {
+                                    apartment: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: '$apartments',
+                                                    as: 'apartment',
+                                                    cond: {
+                                                        eq: ['$$apartment._id', '$$facilityMembership.apartmentId']
+                                                    }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -164,14 +207,6 @@ exports.getFacilityById = async (id) => {
                         0
                     ]
                 }
-            }
-        },
-        {
-            $lookup: {
-                from: 'facilitymemberships',
-                localField: '_id',
-                foreignField: 'facilityId',
-                as: 'facilityMemberships'
             }
         },
         {

@@ -131,6 +131,10 @@ exports.findFacilityMembership = async (id) => {
             $addFields: {
                 facility: { $arrayElemAt: ['$facility', 0] },
                 apartment: { $arrayElemAt: ['$apartment', 0] },
+            }
+        },
+        {
+            $addFields: {
                 facilityItem: {
                     $arrayElemAt: [{
                         $filter: {
