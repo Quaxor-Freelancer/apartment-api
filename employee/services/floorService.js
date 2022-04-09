@@ -54,7 +54,7 @@ exports.getFloor = async ({ floorId }) => {
             $lookup: {
                 from: 'facilities',
                 localField: '_id',
-                foreignField: 'buildingFloorId',
+                foreignField: 'floorId',
                 as: 'facilities'
             }
         },

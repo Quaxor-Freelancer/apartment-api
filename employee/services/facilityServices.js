@@ -36,7 +36,7 @@ exports.getAllFacilitiesByBuilding = (id) => {
                 from: "facilities",
                 as: 'facilities',
                 localField: 'floors._id',
-                foreignField: 'buildingFloorId'
+                foreignField: 'floorId'
             }
         },
         {
@@ -55,7 +55,7 @@ exports.getAllFacilitiesByBuilding = (id) => {
                                                 $filter: {
                                                     input: "$floors",
                                                     as: "floor",
-                                                    cond: { $eq: ["$$floor._id", '$$facility.buildingFloorId'] }
+                                                    cond: { $eq: ["$$floor._id", '$$facility.floorId'] }
                                                 }
                                             },
                                             0
