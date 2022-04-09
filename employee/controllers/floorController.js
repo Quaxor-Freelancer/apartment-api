@@ -5,7 +5,7 @@ const getAllFloorByBuilding = (req, res) => {
     if (!buildingId) {
         return res.status(500).send("Bad Request")
     }
-    floorService.getAllFloorByBuilding({buildingId})
+    floorService.getAllFloorByBuilding({ buildingId })
         .then((data) => {
             res.status(201).json(data[0].floors)
         })
@@ -20,9 +20,9 @@ const getFloor = (req, res) => {
     if (!floorId) {
         return res.status(500).send("Bad Request")
     }
-    floorService.getFloor({floorId})
+    floorService.getFloor({ floorId })
         .then((data) => {
-            res.status(201).json(data.floor)
+            res.status(201).json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -69,7 +69,7 @@ const deleteFloor = (req, res) => {
     if (!floorId) {
         return res.status(500).send("Bad Request")
     }
-    floorService.deleteFloor({floorId})
+    floorService.deleteFloor({ floorId })
         .then(() => {
             res.json({ status: true })
         })
