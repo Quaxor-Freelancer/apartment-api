@@ -32,11 +32,11 @@ const getFloor = (req, res) => {
 
 const createFloor = (req, res) => {
     const { buildingId } = req.params
-    const { code, name, details, status, images } = req.body
+    const { code, name, details, status } = req.body
     if (!buildingId || !code || !name) {
         return res.status(500).send("Bad Request")
     }
-    floorService.createFloor({ buildingId, code, name, details, status, images })
+    floorService.createFloor({ buildingId, code, name, details, status })
         .then(() => {
             res.json({ status: true })
         })
@@ -49,11 +49,11 @@ const createFloor = (req, res) => {
 
 const updateFloor = (req, res) => {
     const { floorId } = req.params
-    const { code, name, details, status, images } = req.body
+    const { code, name, details, status } = req.body
     if (!floorId || !code || !name) {
         return res.status(500).send("Bad Request")
     }
-    floorService.updateFloor({ floorId, code, name, details, status, images })
+    floorService.updateFloor({ floorId, code, name, details, status })
         .then(() => {
             res.json({ status: true })
         })
