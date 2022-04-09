@@ -1,11 +1,12 @@
 const FacilityMembership = require('../../models/FacilityMembership');
 const Facility = require('../../models/Facility');
+const Building = require('../../models/Building')
 const mongoose = require('mongoose');
 
 exports.getAllFacilityMembershipsByApartment = async (id) => {
     const facilityMemberships = await FacilityMembership.aggregate([
         {
-            $match: { apartmentId: mongoose.Types.ObjectId(id)}
+            $match: { apartmentId: mongoose.Types.ObjectId(id) }
         },
         {
             $lookup: {
@@ -27,7 +28,7 @@ exports.getAllFacilityMembershipsByApartment = async (id) => {
 exports.getAllFacilityMembershipsByFacility = async (id) => {
     const facilityMemberships = await FacilityMembership.aggregate([
         {
-            $match: { facilityId: mongoose.Types.ObjectId(id)}
+            $match: { facilityId: mongoose.Types.ObjectId(id) }
         },
         {
             $lookup: {
@@ -49,7 +50,7 @@ exports.getAllFacilityMembershipsByFacility = async (id) => {
 exports.getAllFacilityMembershipsByApartmentAndFacility = async (apartmentId, facilityId) => {
     const facilityMemberships = await FacilityMembership.aggregate([
         {
-            $match: { 
+            $match: {
                 apartmentId: mongoose.Types.ObjectId(apartmentId),
                 facilityId: mongoose.Types.ObjectId(facilityId)
             }
@@ -66,7 +67,7 @@ exports.getAllFacilityMembershipsByApartmentAndFacility = async (apartmentId, fa
 exports.getAllFacilityMembershipsByApartmentAndFacilityCategory = async (apartmentId, facilityCategoryId) => {
     const facilities = await Facility.aggregate([
         {
-            $match: { facilityCategoryId: mongoose.Types.ObjectId(facilityCategoryId)}
+            $match: { facilityCategoryId: mongoose.Types.ObjectId(facilityCategoryId) }
         },
         {
             $project: {
@@ -74,10 +75,10 @@ exports.getAllFacilityMembershipsByApartmentAndFacilityCategory = async (apartme
             }
         }
     ])
-    const facilityIds = facilities.map(item=> item._id)
+    const facilityIds = facilities.map(item => item._id)
     const facilityMemberships = await FacilityMembership.aggregate([
         {
-            $match: { 
+            $match: {
                 apartmentId: mongoose.Types.ObjectId(apartmentId),
                 facilityId: { $in: facilityIds }
             }
@@ -91,12 +92,12 @@ exports.getAllFacilityMembershipsByApartmentAndFacilityCategory = async (apartme
     return facilityMemberships;
 }
 
-exports.createFacilityMembership = async (facilityId ,{ facilityItemId, apartmentId, type, membership, status }) => {
-    if  ( !facilityId || !apartmentId || !type || !membership ) {
-        throw {success: false, error: "Bad Request"}
+exports.createFacilityMembership = async (facilityId, { facilityItemId, apartmentId, type, membership, status }) => {
+    if (!facilityId || !apartmentId || !type || !membership) {
+        throw { success: false, error: "Bad Request" }
     }
-    if(!validateMembership(type, membership)){
-        throw { success: false, error: "Validation Error"}
+    if (!validateMembership(type, membership)) {
+        throw { success: false, error: "Validation Error" }
     }
     // Create facility membership
     const facility = await FacilityMembership.create({
@@ -106,9 +107,9 @@ exports.createFacilityMembership = async (facilityId ,{ facilityItemId, apartmen
 }
 
 exports.findFacilityMembership = async (id) => {
-    const facilityMemberships= await FacilityMembership.aggregate([
+    const facilityMemberships = await FacilityMembership.aggregate([
         {
-            $match: { _id: mongoose.Types.ObjectId(id)}
+            $match: { _id: mongoose.Types.ObjectId(id) }
         },
         {
             $lookup: {
@@ -130,43 +131,43 @@ exports.findFacilityMembership = async (id) => {
             $limit: 1
         }
     ])
-    if(!facilityMemberships[0]){
-        throw { success: false, error: "FacilityMembership Not Found"}
+    if (!facilityMemberships[0]) {
+        throw { success: false, error: "FacilityMembership Not Found" }
     }
     return facilityMemberships[0]
 }
 
-exports.updateFacilityMembership = async ( id, {facilityId , facilityItemId, apartmentId, type, membership, status }) => {
-    if  ( !facilityId || !apartmentId || !type || !membership ) {
-        throw {success: false, error: "Bad Request"}
+exports.updateFacilityMembership = async (id, { facilityId, facilityItemId, apartmentId, type, membership, status }) => {
+    if (!facilityId || !apartmentId || !type || !membership) {
+        throw { success: false, error: "Bad Request" }
     }
-    if(!validateMembership(type, membership)){
-        throw { success: false, error: "Validation Error"}
+    if (!validateMembership(type, membership)) {
+        throw { success: false, error: "Validation Error" }
     }
     return FacilityMembership.updateOne({ _id: id }, {
-        $set: { facilityId ,facilityItemId, apartmentId, type, membership, status }
+        $set: { facilityId, facilityItemId, apartmentId, type, membership, status }
     })
 }
 
 exports.deleteFacilityMembership = async (id) => {
-    const result= await FacilityMembership.deleteOne({ _id: id })
-    if(result.n ===0){
-        throw { success: false, error: "FacilityMembership Not Found"}
+    const result = await FacilityMembership.deleteOne({ _id: id })
+    if (result.n === 0) {
+        throw { success: false, error: "FacilityMembership Not Found" }
     }
     return result
 }
 
 
-const validateMembership=(type, membership)=>{
-    if (!["fulltime", "weekly", "monthly", "once"].includes(type)){
+const validateMembership = (type, membership) => {
+    if (!["fulltime", "weekly", "monthly", "once"].includes(type)) {
         return false
     }
 
-    if(type === "fultime" && ( !membership || !Object.keys(membership).length)){
+    if (type === "fultime" && (!membership || !Object.keys(membership).length)) {
         return true
     }
 
-    if(membership && membership[type] && (Object.keys(membership).length ===1)){
+    if (membership && membership[type] && (Object.keys(membership).length === 1)) {
         return true
     }
     return false

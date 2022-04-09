@@ -2,7 +2,7 @@ const userService = require('../services/userService')
 
 const getMe = (req, res, next) => {
     const user = req.user;
-    userService.getMe(user)
+    userService.getMe(user.employee._id)
         .then(result => {
             res.json(result)
         })

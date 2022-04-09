@@ -12,7 +12,7 @@ const findCustomer = (req, res, next) => {
     const { customerId } = req.params
     customerServices.findCustomerById(customerId)
     .then((customer)=>{
-        return res.status(201).json(customer)
+        return res.status(201).json(customer[0])
     })
     .catch(error=>next(error))
 }
