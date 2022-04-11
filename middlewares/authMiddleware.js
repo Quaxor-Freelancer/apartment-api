@@ -20,7 +20,8 @@ module.exports = {
                 next()
             } catch (error) {
                 console.log(error)
-                res.status(401).send("Not authorized")
+                if (error.name === "TokenExpiredError") res.status(401).send("Session Expired")
+                else res.status(401).send("Not authorized")
                 // throw new Error("Not authorized")
             }
         }

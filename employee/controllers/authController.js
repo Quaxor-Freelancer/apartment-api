@@ -2,10 +2,10 @@ const authServices = require("../services/authServices")
 // const asyncHandler = require('express-async-handler')
 
 const loginEmployeee = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     try {
-        const user = await authServices.loginEmployee(email, password)
+        const user = await authServices.loginEmployee(email, password, rememberMe)
         res.json(user)
     } catch (error) {
         res.status(401).send(error.message)

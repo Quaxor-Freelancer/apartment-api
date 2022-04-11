@@ -5,7 +5,7 @@ const sendMail = require("../../utils/email");
 const config = require('../../config/keys')
 const { makeUid } = require('../../utils/utils')
 
-exports.loginEmployee = async (email, password) => {
+exports.loginEmployee = async (email, password, rememberMe) => {
     const employee = await Employee.findOne({ email })
 
     if (employee && (await bcrypt.compare(password, employee.password))) {
@@ -20,7 +20,7 @@ exports.loginEmployee = async (email, password) => {
         return {
             _id: employee.id,
             accessToken: generateAccessToken(encryptedEmployee),
-            refreshToken: generateRefreshToken(encryptedEmployee),
+            refreshToken: generateRefreshToken(encryptedEmployee, rememberMe),
             employee: {
                 firstname: employee.firstname,
                 lastname: employee.lastname,
@@ -35,11 +35,13 @@ exports.loginEmployee = async (email, password) => {
 exports.tokenRefresh = (refreshToken) => {
     try {
         const decodedEmployee = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+        delete decodedEmployee.exp
+        delete decodedEmployee.iat
         const accessToken = generateAccessToken(decodedEmployee)
         return accessToken;
     } catch (error) {
         console.log(error)
-        throw new Error("Error occured")
+        throw { success: false, error: error.message, statusCode: 401 }
     }
 }
 
@@ -153,11 +155,13 @@ exports.logout = (employeeId) => {
 
 const generateAccessToken = (object) => {
     return jwt.sign(object, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1d',
+        expiresIn: '1h',
 
     })
 }
 
-const generateRefreshToken = (object) => {
-    return jwt.sign(object, process.env.REFRESH_TOKEN_SECRET)
+const generateRefreshToken = (object, rememberMe) => {
+    return jwt.sign(object, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: rememberMe ? '4w' : '5d',
+    })
 }
