@@ -24,7 +24,20 @@ const mongoose = require('mongoose');
 //     return facilities;
 // }
 
-exports.getAllFacilitiesByBuilding = (id) => {
+exports.getAllFacilitiesByBuilding = (id, { common }) => {
+    const commonFilter = typeof common !== 'undefined' ? [{
+        $addFields: {
+            facilities: {
+                $filter: {
+                    input: '$facilities',
+                    as: 'facility',
+                    cond: {
+                        $eq: ['$$facility.common', !!Number(common)]
+                    }
+                }
+            }
+        }
+    }] : []
     return Building.aggregate([
         {
             $match: {
@@ -39,6 +52,7 @@ exports.getAllFacilitiesByBuilding = (id) => {
                 foreignField: 'floorId'
             }
         },
+        ...commonFilter,
         {
             $addFields: {
                 facilities: {
@@ -117,7 +131,6 @@ exports.getAllFacilitiesByFloor = async (id) => {
 }
 
 exports.getFacilityById = async (id) => {
-    console.log(id)
     const facility = await Facility.aggregate([
         {
             $match: { _id: mongoose.Types.ObjectId(id) }
@@ -216,7 +229,7 @@ exports.getFacilityById = async (id) => {
         }
     ])
     if (!facility[0]) {
-        throw { success: false, error: "Facility Not Found" }
+        throw { success: false, statusCode: 404, error: "Facility Not Found" }
     }
     return facility[0]
 }

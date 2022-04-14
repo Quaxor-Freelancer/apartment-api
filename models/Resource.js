@@ -15,8 +15,8 @@ const ResourceSchema = new Schema({
         type: Boolean,
         default: true
     }
-    }, { timestamps: true }
+}, { timestamps: true }
 );
 
-const Resource = mongoose.model('Resource', ResourceSchema);
+const Resource = mongoose.model('resource', ResourceSchema);
 module.exports = Resource

@@ -23,8 +23,8 @@ const FacilityCategorySchema = new Schema({
         type: Boolean,
         default: true
     }
-    }, { timestamps: true }
+}, { timestamps: true }
 );
 
-const FacilityCategory = mongoose.model('FacilityCategory', FacilityCategorySchema);
+const FacilityCategory = mongoose.model('facilityCategory', FacilityCategorySchema);
 module.exports = FacilityCategory

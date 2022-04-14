@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Image = require('./schemas/Image')
 
-const FloorSchema =  new Schema({
+const FloorSchema = new Schema({
     code: {
         type: String,
         required: true
@@ -61,5 +61,5 @@ const BuildingSchema = new Schema({
     },
 }, { timestamps: true });
 
-const Building = mongoose.model('Building', BuildingSchema);
+const Building = mongoose.model('building', BuildingSchema);
 module.exports = Building

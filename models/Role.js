@@ -15,8 +15,8 @@ const RoleSchema = new Schema({
     status: {
         type: Boolean,
         default: false
-    } 
+    }
 }, { timestamps: true });
 
-const Role = mongoose.model('Role', RoleSchema);
+const Role = mongoose.model('role', RoleSchema);
 module.exports = Role

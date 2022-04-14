@@ -3,7 +3,7 @@ const buildingService = require('../services/buildingService')
 const getAllBuildings = (req, res, next) => {
     buildingService.getAllBuildings()
         .then((data) => {
-            res.status(201).json(data)
+            res.json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -16,10 +16,10 @@ const getBuilding = (req, res, next) => {
     if (!buildingId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.getBuilding({buildingId})
+    buildingService.getBuilding({ buildingId })
         .then((data) => {
             console.log(data)
-            res.status(201).json(data)
+            res.json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -34,7 +34,7 @@ const createBuilding = (req, res) => {
     }
     buildingService.createBuilding({ buildingCode, name, city, country, address, buildingServiceType, facilityIds, floors, status })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -51,7 +51,7 @@ const updateBuilding = (req, res) => {
     }
     buildingService.updateBuilding({ buildingId, buildingCode, name, city, country, address, buildingType, facilityIds, floors, status })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -65,9 +65,9 @@ const deleteBuilding = (req, res) => {
     if (!buildingId) {
         return res.status(500).send("Bad Request")
     }
-    buildingService.deleteBuilding({buildingId})
+    buildingService.deleteBuilding({ buildingId })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -84,7 +84,7 @@ const changeStatus = (req, res) => {
     }
     buildingService.changeStatus({ buildingId, status })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)

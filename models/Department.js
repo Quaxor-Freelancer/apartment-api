@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const useSchema = mongoose.Schema({
+const departmentSchema = mongoose.Schema({
     code: {
         type: String,
         unique: true,
@@ -16,4 +16,4 @@ const useSchema = mongoose.Schema({
     }
 }, { timestamps: true })
 
-module.exports = mongoose.model("Department", useSchema);
+module.exports = mongoose.model("department", departmentSchema);

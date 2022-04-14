@@ -3,7 +3,7 @@ const apartmentService = require('../services/apartmentServices')
 const getAllApartments = (req, res, next) => {
     apartmentService.getAllApartments()
         .then((data) => {
-            res.status(201).json(data)
+            res.json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -18,7 +18,7 @@ const getApartment = (req, res) => {
     }
     apartmentService.getApartment(apartmentId)
         .then((data) => {
-            res.status(201).json(data)
+            res.json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -33,7 +33,7 @@ const createApartment = (req, res) => {
     }
     apartmentService.createApartment({ code, name, details, floorId, buildingId, ownerId, status })
         .then((apartment) => {
-            res.json(apartment)
+            res.status(201).json(apartment)
         })
         .catch((err) => {
             console.log(err)
@@ -50,7 +50,7 @@ const updateApartment = (req, res) => {
     }
     apartmentService.updateApartment({ apartmentId, code, name, details, floorId, buildingId, ownerId, status })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -66,7 +66,7 @@ const deleteApartment = (req, res) => {
     }
     apartmentService.deleteApartment(apartmentId)
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -78,12 +78,12 @@ const deleteApartment = (req, res) => {
 const changeStatus = (req, res) => {
     const { apartmentId } = req.params
     const { status } = req.body
-    if (!apartmentId || status===undefined) {
+    if (!apartmentId || status === undefined) {
         return res.status(500).send("Bad Request")
     }
     apartmentService.changeStatus({ apartmentId, status })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -99,7 +99,7 @@ const getApartmentByFloor = (req, res) => {
     }
     apartmentService.getApartmentByFloor(floorId)
         .then((data) => {
-            res.status(201).json(data)
+            res.json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -114,7 +114,7 @@ const getApartmentByBuilding = (req, res) => {
     }
     apartmentService.getApartmentByBuilding(buildingId)
         .then((data) => {
-            res.status(201).json(data)
+            res.json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -125,10 +125,10 @@ const getApartmentByBuilding = (req, res) => {
 
 const updateApartmentOwner = (req, res, next) => {
     apartmentService.updateApartmentOwner(req.params, req.body)
-    .then(()=>{
-        res.json({success: true})
-    })
-    .catch(error=>next(error))
+        .then(() => {
+            res.json({ success: true })
+        })
+        .catch(error => next(error))
 }
 
 module.exports = {

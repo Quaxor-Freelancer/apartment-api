@@ -7,7 +7,7 @@ const getAllFloorByBuilding = (req, res) => {
     }
     floorService.getAllFloorByBuilding({ buildingId })
         .then((data) => {
-            res.status(201).json(data[0].floors)
+            res.json(data[0].floors)
         })
         .catch((err) => {
             console.log(err)
@@ -22,7 +22,7 @@ const getFloor = (req, res) => {
     }
     floorService.getFloor({ floorId })
         .then((data) => {
-            res.status(201).json(data)
+            res.json(data)
         })
         .catch((err) => {
             console.log(err)
@@ -38,7 +38,7 @@ const createFloor = (req, res) => {
     }
     floorService.createFloor({ buildingId, code, name, details, status })
         .then(() => {
-            res.json({ status: true })
+            res.json.status(201)({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -55,7 +55,7 @@ const updateFloor = (req, res) => {
     }
     floorService.updateFloor({ floorId, code, name, details, status })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -71,7 +71,7 @@ const deleteFloor = (req, res) => {
     }
     floorService.deleteFloor({ floorId })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)
@@ -88,7 +88,7 @@ const changeFloorStatus = (req, res) => {
     }
     floorService.changeFloorStatus({ floorId, status })
         .then(() => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch((err) => {
             console.log(err)

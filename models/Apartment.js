@@ -19,12 +19,12 @@ const ApartmentSchema = new Schema({
         ref: 'buildings',
         required: true
     },
-    floorId:  {
+    floorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'buildings',
         required: true
     },
-    ownerId:  {
+    ownerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'customers'
     },
@@ -35,9 +35,9 @@ const ApartmentSchema = new Schema({
         type: Boolean,
         default: true
     }
-    }, { timestamps: true });
+}, { timestamps: true });
 
 
-    const Apartment = mongoose.model('Apartment', ApartmentSchema);
-    module.exports = Apartment
+const Apartment = mongoose.model('apartment', ApartmentSchema);
+module.exports = Apartment
 

@@ -64,5 +64,5 @@ const facilityMembershipSchema = mongoose.Schema({
     }
 }, { timestamps: true })
 
-const FacilityMembership = mongoose.model("FacilityMembership", facilityMembershipSchema);
+const FacilityMembership = mongoose.model("facilityMembership", facilityMembershipSchema);
 module.exports = FacilityMembership;

@@ -17,7 +17,7 @@ const updateInfo = (req, res, next) => {
     const { firstname, lastname, phone, address } = req.body;
     userService.updateInfo(id, { firstname, lastname, phone, address })
         .then(result => {
-            res.json({ status: true })
+            res.status(201).json({ status: true })
         })
         .catch(e => {
             console.log(e)
@@ -35,7 +35,7 @@ const changePassword = async (req, res, next) => {
     }
 
     const result = await userService.changePassword({ id, oldPassword, newPassword })
-    res.json({ status: true, result })
+    res.status(201).json({ status: true, result })
 }
 
 module.exports = {

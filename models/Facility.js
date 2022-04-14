@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Image = require('./schemas/Image')
 
-const FacilitySchema =  new Schema({
+const FacilitySchema = new Schema({
     facilityCategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Facility',
@@ -39,7 +39,7 @@ const FacilitySchema =  new Schema({
         type: Boolean,
         default: false
     },
-    items:[{
+    items: [{
         code: {
             type: String,
             required: true
@@ -57,5 +57,5 @@ const FacilitySchema =  new Schema({
 }, { timestamps: true })
 
 
-const Facility = mongoose.model('Facility', FacilitySchema);
+const Facility = mongoose.model('facility', FacilitySchema);
 module.exports = Facility
