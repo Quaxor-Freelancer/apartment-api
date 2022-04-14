@@ -24,14 +24,14 @@ exports.getBuilding = ({ buildingId }) => {
     ]).then(data => data[0])
 }
 
-exports.createBuilding = ({ buildingCode, name, city, country, address, buildingType, facilityIds, floors = [], status, resourceIds }) => {
+exports.createBuilding = ({ buildingCode, name, city, country, address, buildingType, facilityIds, floors = [], status, resourceIds=[] }) => {
     const building = new Building({
         buildingCode, name, city, country, address, buildingType, facilityIds, floors, status, resourceIds
     })
     return building.save()
 }
 
-exports.updateBuilding = ({ buildingId, buildingCode, name, city, country, address, buildingType, facilityIds = [], floors = [], status, resourceIds }) => {
+exports.updateBuilding = ({ buildingId, buildingCode, name, city, country, address, buildingType, facilityIds = [], floors = [], status, resourceIds=[] }) => {
     return Building.updateOne({ _id: buildingId }, {
         $set: {
             buildingCode,
