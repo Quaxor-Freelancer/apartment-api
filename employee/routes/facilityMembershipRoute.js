@@ -7,7 +7,7 @@ router.get('/byFacility/:facilityId', facilityMembershipController.getAllFacilit
 router.get('/byApartment/byFacility/:apartmentId/:facilityId', facilityMembershipController.getAllFacilityMembershipsByApartmentAndFacility);
 router.get('/byApartment/byFacilityCategory/:apartmentId/:facilityCategoryId', facilityMembershipController.getAllFacilityMembershipsByApartmentAndFacilityCategory);
 router.get('/:membershipId', facilityMembershipController.findFacilityMembership)
-router.post('/:facilityId', facilityMembershipController.createFacilityMembership);
+router.post('/', facilityMembershipController.createFacilityMembership);
 router.put('/update/:membershipId', facilityMembershipController.updateFacilityMembership);
 router.delete('/:membershipId', facilityMembershipController.deleteFacilityMembership);
 

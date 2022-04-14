@@ -92,7 +92,7 @@ exports.getAllFacilityMembershipsByApartmentAndFacilityCategory = async (apartme
     return facilityMemberships;
 }
 
-exports.createFacilityMembership = async (facilityId, { facilityItemId, apartmentId, type, membership, status }) => {
+exports.createFacilityMembership = async ({ facilityId, facilityItemId, apartmentId, type, membership, status }) => {
     if (!facilityId || !apartmentId || !type) {
         throw { success: false, error: "Bad Request" }
     }

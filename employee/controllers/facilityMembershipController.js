@@ -37,8 +37,7 @@ const getAllFacilityMembershipsByApartmentAndFacilityCategory = (req, res, next)
 }
 
 const createFacilityMembership = (req, res, next) => {
-    const { facilityId } = req.params;
-    facilityMembershipServices.createFacilityMembership(facilityId, req.body)
+    facilityMembershipServices.createFacilityMembership(req.body)
         .then((facilityMembership) => {
             return res.status(201).json(facilityMembership)
         })
