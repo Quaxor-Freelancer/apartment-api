@@ -19,9 +19,7 @@ const FloorSchema = new Schema({
         type: Boolean,
         default: true
     },
-    images: [{
-        type: String
-    }]
+    images: [Image]
 }, { timestamps: true })
 
 const BuildingSchema = new Schema({
@@ -50,11 +48,12 @@ const BuildingSchema = new Schema({
         enum: ['new', 'upcoming', 'future', 'default'],
         default: 'default'
     },
-    resourceIds: [mongoose.Schema.Types.ObjectId],
+    resourceIds: {
+        type: [mongoose.Schema.Types.ObjectId],
+        default: []
+    },
     floors: [FloorSchema],
-    images: [{
-        type: String
-    }],
+    images: [Image],
     status: {
         type: Boolean,
         default: true
