@@ -9,6 +9,10 @@ router.put('/:buildingId', buildingController.updateBuilding);
 router.put('/status/:buildingId', buildingController.changeStatus);
 router.delete('/:buildingId', buildingController.deleteBuilding);
 
+router.post('/image/:buildingId', buildingController.createBuildingImage);
+router.put('/image/:imageId/:key', buildingController.changeBuildingImage);
+router.delete('/image/:id/:key', buildingController.removeBuildingImage);
+
 // router.get('/floors/:floorId', buildingController.getFloor);
 // router.get('/floors/:buildingId', buildingController.getAllFloorByBuilding);
 // router.post('/floors/:buildingId', buildingController.createFloor);

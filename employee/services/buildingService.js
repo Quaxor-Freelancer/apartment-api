@@ -59,3 +59,28 @@ exports.changeStatus = ({ buildingId, status }) => {
         }
     })
 }
+
+exports.addImages = (buildingId, arrayOfKeys) => {
+    return Building.updateOne({ _id: buildingId }, {
+        $push: {
+            images: arrayOfKeys
+        }
+    }) 
+}
+
+exports.removeBuildingImage = (id, key) => {
+    return Building.updateOne({_id: id }, {
+        $pull: {
+            images: {url: key}
+        }
+    }) 
+}
+
+
+exports.changeImage = (imageId, file) => {
+    return Building.updateOne({'images._id': imageId}, {
+        $set: {
+            'images.$.url':file
+        }
+    })
+}

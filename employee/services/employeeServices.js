@@ -160,3 +160,19 @@ exports.updateEmployeeAccountStatus = async ({ employeeId, loginEnabled }) => {
     }
     return result
 }
+
+exports.addImages = (employeeId, key) => {
+    return Employee.updateOne({ _id: employeeId }, {
+        $set: {
+            image: key
+        }
+    }) 
+}
+
+exports.removeEmployeeImage = (id) => {
+    return Employee.updateOne({_id: id }, {
+        $set: {
+            image: null
+        }
+    }) 
+}

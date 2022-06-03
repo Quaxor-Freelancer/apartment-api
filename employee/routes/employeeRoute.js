@@ -12,5 +12,9 @@ router.put('/role/:employeeId', employeeController.updateEmployeeRole);
 router.post('/user/reset', employeeController.updatePassword);
 router.post('/user/status', employeeController.updateEmployeeAccountStatus);
 
+router.post('/image/:employeeId', employeeController.createEmployeeImage);
+router.put('/image/:employeeId/:key', employeeController.changeEmployeeImage);
+router.delete('/image/:id/:key', employeeController.removeEmployeeImage);
+
 
 module.exports = router;

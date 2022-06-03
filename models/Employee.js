@@ -61,6 +61,9 @@ const employeeSchema = mongoose.Schema({
             type: mongoose.Schema.Types.Date,
             detault: null
         }
+    },
+    image: {
+        type: String
     }
 }, { timestamps: true })
 

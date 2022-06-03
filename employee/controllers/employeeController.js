@@ -1,4 +1,5 @@
 const employeeServices = require('../services/employeeServices')
+const {upload, uploadSingle, deleteFile} = require('../../config/s3')
 
 const getAllEmployees = (req, res, next) => {
     employeeServices.getAllEmployees()
@@ -72,6 +73,78 @@ const updateEmployeeAccountStatus = (req, res, next) => {
         .catch(error => next(error))
 }
 
+const createEmployeeImage = (req, res) => {
+    const { employeeId } = req.params
+
+    uploadSingle(req, res, async (err) => {
+        if (err)
+            return res.status(400).json({ success: false, message: err.message });
+    
+        const key = req.file.key
+        await employeeServices.addImages(employeeId, key)
+            .then(()=>{
+                res.status(200).json({ msg: 'success', image:  key});
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        console.log(key)
+    });
+    
+}
+
+
+const changeEmployeeImage = async(req, res) => {
+    const { employeeId, key } = req.params
+    await deleteFile(key)
+        .then(()=>{
+            uploadSingle(req, res, async (err) => {
+                if (err) {
+                    await employeeServices.addImages(employeeId, key)
+                    .then(()=>{
+                        res.status(400).json({ msg: 'failed', image:  key});
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
+            
+                const file = req.file.key
+                await employeeServices.addImages(employeeId, file)
+                    .then(()=>{
+                        res.status(200).json({ msg: 'success', image:  file});
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                console.log(file)
+            });
+        })
+        .catch((err)=>{
+           console.log(err)
+        })
+}
+
+const removeEmployeeImage = async (req, res) => {
+    const { id, key } = req.params;
+    await employeeServices.removeEmployeeImage(id)
+        .then(async()=>{
+            await deleteFile(key)
+                .then(()=>{
+                    res.status(200).json({ msg: 'success', isDeleted: true});
+                    console.log('success')
+                })
+                .catch((err)=>{
+                    employeeServices.addImages(id, key)
+                    res.send(400)
+                })
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+}
+
+
 module.exports = {
     getAllEmployees,
     createEmployee,
@@ -81,5 +154,8 @@ module.exports = {
     updateEmployeeStatus,
     updateEmployeeRole,
     updatePassword,
-    updateEmployeeAccountStatus
+    updateEmployeeAccountStatus,
+    createEmployeeImage,
+    removeEmployeeImage,
+    changeEmployeeImage
 }

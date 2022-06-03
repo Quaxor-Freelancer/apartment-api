@@ -1,4 +1,5 @@
 const buildingService = require('../services/buildingService')
+const {upload, uploadMultiple, deleteFile, uploadSingle} = require('../../config/s3')
 
 const getAllBuildings = (req, res, next) => {
     buildingService.getAllBuildings()
@@ -93,6 +94,73 @@ const changeStatus = (req, res) => {
         .catch(error => next(error))
 }
 
+const createBuildingImage = (req, res) => {
+    const { buildingId } = req.params
+
+    uploadMultiple(req, res, async (err) => {
+        if (err)
+            return res.status(400).json({ success: false, message: err.message });
+    
+        const arrayOfKeys = []
+        console.log(req.files)
+        await req.files.map((item)=>arrayOfKeys.push({url: item.key}))
+        await buildingService.addImages(buildingId, arrayOfKeys)
+            .then(()=>{
+                res.status(200).json({ msg: 'success', uploadedImages:  arrayOfKeys});
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+    });
+}
+
+
+const changeBuildingImage = async(req, res) => {
+    const {imageId, key} = req.params
+    console.log({change: key})
+    await deleteFile(key)
+        .then(()=>{
+            uploadSingle(req, res, async (err) => {
+                if (err) {
+                    res.status(400).json({ msg: 'failed', image:  key});
+                }
+            
+                const file = req.file.key
+                await buildingService.changeImage(imageId, file)
+                    .then(()=>{
+                        res.status(200).json({ msg: 'success', image:  file});
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                console.log(file)
+            });
+        })
+        .catch((err)=>{
+           console.log(err)
+        })
+}
+
+
+const removeBuildingImage = async (req, res) => {
+    const { id, key } = req.params;
+    await buildingService.removeBuildingImage(id, key)
+        .then(async()=>{
+            await deleteFile(key)
+                .then(()=>{
+                    res.status(200).json({ msg: 'success', isDeleted: true});
+                    console.log('success')
+                })
+                .catch((err)=>{
+                    buildingService.addImages(id, [{url: key}])
+                    res.send(400)
+                })
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+}
+
 
 module.exports = {
     getAllBuildings,
@@ -100,5 +168,8 @@ module.exports = {
     createBuilding,
     updateBuilding,
     deleteBuilding,
-    changeStatus
+    changeStatus,
+    createBuildingImage,
+    removeBuildingImage,
+    changeBuildingImage
 }
